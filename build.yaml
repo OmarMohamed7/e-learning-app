@@ -1,0 +1,16 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          explicit_to_json: true
+      retrofit_generator:
+        options:
+          # Control whether to add '// dart format off/on' comments (default: true)
+          format_output: true
+          # Enable automatic response type casting (default: true)
+          auto_cast_response: true
+          # Generate empty request body for methods without parameters (default: false)
+          empty_request_body: false
+          # Enable useResult annotation for methods (default: false)
+          use_result: false

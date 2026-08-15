@@ -1,0 +1,26 @@
+[
+  {
+    "id": "flutter",
+    "name": "Flutter",
+    "icon": "flutter_dash",
+    "order": 0
+  },
+  {
+    "id": "business",
+    "name": "Business",
+    "icon": "business_center",
+    "order": 1
+  },
+  {
+    "id": "ui_ux",
+    "name": "UI/UX",
+    "icon": "brush",
+    "order": 2
+  },
+  {
+    "id": "marketing",
+    "name": "Marketing",
+    "icon": "campaign",
+    "order": 3
+  }
+]

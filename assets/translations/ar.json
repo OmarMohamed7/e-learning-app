@@ -1,0 +1,23 @@
+{
+  "appTitle": "منتور ستريم",
+  "homeTitle": "الرئيسية",
+  "courseDetailsTitle": "تفاصيل الدورة",
+  "myCoursesTitle": "دوراتي",
+  "accountTitle": "الحساب",
+  "retry": "إعادة المحاولة",
+  "genericError": "حدث خطأ ما. الرجاء المحاولة مرة أخرى.",
+  "homeGreeting": "مرحبًا، {name}",
+  "homeSubtitle": "لنتعلم شيئًا جديدًا اليوم!",
+  "searchHint": "ابحث عن دورة أو مدرّب هنا",
+  "continueLearningTitle": "متابعة التعلم",
+  "exploreTopicsTitle": "استكشف المواضيع",
+  "mostPopularClassTitle": "الأكثر رواجًا",
+  "seeAll": "عرض الكل",
+  "lessonsProgress": "{completed} من {total} درسًا",
+  "percentCompleted": "اكتمل {percent}%",
+  "topicBusiness": "الأعمال",
+  "topicDesign": "التصميم",
+  "topicFinance": "التمويل",
+  "topicProgramming": "البرمجة",
+  "topicMarketing": "التسويق"
+}
