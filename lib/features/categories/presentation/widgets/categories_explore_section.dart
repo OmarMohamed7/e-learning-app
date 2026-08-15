@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/section_header.dart';
-import '../../data/providers/categories_providers.dart';
+import '../providers/categories_providers.dart';
 import '../models/explore_topic.dart';
+import 'category_icon_mapper.dart';
 import 'explore_topics_row_shimmer.dart';
-import 'topic_item.dart';
+import 'topic_item_widget.dart';
 
 class CategoriesExploreSection extends ConsumerWidget {
   const CategoriesExploreSection({
@@ -16,7 +17,7 @@ class CategoriesExploreSection extends ConsumerWidget {
   });
 
   final VoidCallback? onSeeAll;
-  final ValueChanged<ExploreTopic>? onCategoryTap;
+  final ValueChanged<String>? onCategoryTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,20 +34,14 @@ class CategoriesExploreSection extends ConsumerWidget {
             children: [
               for (final category in categories)
                 TopicItem(
-                  topic: (
-                    icon: category.icon != null ? Icon(Icons.abc) : null,
-                    label: category.name,
-                  ),
+                  topicName: category.name,
                   onTap: onCategoryTap == null
                       ? null
-                      : () => onCategoryTap!((
-                          icon: category.icon != null ? Icon(Icons.abc) : null,
-                          label: category.name,
-                        )),
+                      : () => onCategoryTap!(category.name),
                 ),
             ],
           ),
-          loading: () => const ExploreTopicsRowShimmer(),
+          loading: () => const ExploreTopicsShimmer(),
           error: (error, stackTrace) => Row(
             children: [
               Expanded(

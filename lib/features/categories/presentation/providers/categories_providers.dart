@@ -4,7 +4,7 @@ import 'package:mentor_stream_flutter/features/categories/data/models/category_m
 import 'package:mentor_stream_flutter/features/categories/data/repositories/remote_category_repository.dart';
 import 'package:mentor_stream_flutter/features/categories/domain/repositories/i_categories_repo.dart';
 
-import '../datasources/categories_api.dart';
+import '../../data/datasources/categories_api.dart';
 
 final Provider<CategoriesApi> categoriesApiProvider = Provider<CategoriesApi>((
   ref,

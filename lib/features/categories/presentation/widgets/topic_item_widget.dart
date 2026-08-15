@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mentor_stream_flutter/features/categories/presentation/widgets/category_icon_mapper.dart';
 
-import '../models/explore_topic.dart';
-
-/// A single circular icon + label in the "Explore Topics" row.
 class TopicItem extends StatelessWidget {
-  const TopicItem({required this.topic, this.onTap, super.key});
+  const TopicItem({required this.topicName, this.onTap, super.key});
 
-  final ExploreTopic topic;
+  final String topicName;
   final VoidCallback? onTap;
 
   @override
@@ -23,10 +21,13 @@ class TopicItem extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: scheme.primary.withValues(alpha: 0.1),
-              child: topic.icon ?? Icon(Icons.abc, color: scheme.primary),
+              child: Icon(
+                CategoryIconMapper.resolve(topicName),
+                color: scheme.primary,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(topic.label, style: Theme.of(context).textTheme.bodyMedium),
+            Text(topicName, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),

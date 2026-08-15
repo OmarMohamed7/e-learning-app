@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-/// Placeholder shown in place of the topic icon row while categories load.
-class ExploreTopicsRowShimmer extends StatelessWidget {
-  const ExploreTopicsRowShimmer({this.itemCount = 4, super.key});
+class ExploreTopicsShimmer extends StatelessWidget {
+  const ExploreTopicsShimmer({this.itemCount = 4, super.key});
 
   final int itemCount;
 

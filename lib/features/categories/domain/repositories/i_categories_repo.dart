@@ -1,3 +1,4 @@
+// ignore: file_names
 import '../../data/models/category_model.dart';
 
 abstract interface class ICategoryRepository {
