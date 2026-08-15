@@ -8,7 +8,7 @@ sealed class CategoryModel with _$CategoryModel {
   const factory CategoryModel({
     required String id,
     required String name,
-    required String icon,
+    String? icon,
     @Default(0) int order,
   }) = _CategoryModel;
 

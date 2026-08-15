@@ -23,7 +23,7 @@ class TopicItem extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: scheme.primary.withValues(alpha: 0.1),
-              child: Icon(topic.icon, color: scheme.primary),
+              child: topic.icon ?? Icon(Icons.abc, color: scheme.primary),
             ),
             const SizedBox(height: 8),
             Text(topic.label, style: Theme.of(context).textTheme.bodyMedium),

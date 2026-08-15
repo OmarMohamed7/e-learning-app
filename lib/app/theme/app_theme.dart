@@ -43,14 +43,12 @@ abstract final class AppTheme {
             titleMedium: base.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
-            bodyMedium: base.textTheme.bodyMedium?.copyWith(
-              color: mutedText,
-            ),
+            bodyMedium: base.textTheme.bodyMedium?.copyWith(color: mutedText),
             bodySmall: base.textTheme.bodySmall?.copyWith(color: mutedText),
           ),
       appBarTheme: AppBarTheme(
-        backgroundColor: scheme.surface,
-        foregroundColor: scheme.onSurface,
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -97,10 +95,7 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-          ),
+          textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
           elevation: 0,
         ),
       ),

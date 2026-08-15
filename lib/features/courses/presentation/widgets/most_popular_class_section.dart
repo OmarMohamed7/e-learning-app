@@ -5,8 +5,6 @@ import '../../../../core/widgets/section_header.dart';
 import '../../domain/entities/course.dart';
 import 'popular_class_card.dart';
 
-/// The "Most Popular Class" section: a title/See-All header over a
-/// horizontally-scrolling row of course cards.
 class MostPopularClassSection extends StatelessWidget {
   const MostPopularClassSection({
     required this.courses,
@@ -28,10 +26,7 @@ class MostPopularClassSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(
-          title: 'mostPopularClassTitle'.tr(),
-          onSeeAll: onSeeAll,
-        ),
+        SectionHeader(title: 'mostPopularClassTitle'.tr(), onSeeAll: onSeeAll),
         const SizedBox(height: 12),
         SizedBox(
           height: 180,
