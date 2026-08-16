@@ -19,23 +19,18 @@ class HomePage extends ConsumerWidget {
     final progress = ref.watch(progressControllerProvider);
 
     ContinueLearningProgress? continueLearning;
-    final lastWatchedCourseId = progress.lastWatchedCourseId;
-    if (lastWatchedCourseId != null) {
+    final lastWatched = progress.lastWatchedCourse;
+    if (lastWatched != null) {
       coursesAsync.whenData((courses) {
         for (final course in courses) {
-          if (course.id != lastWatchedCourseId) continue;
-
-          final videos = ref
-              .watch(courseVideosProvider(lastWatchedCourseId))
-              .value;
-          if (videos == null) break;
+          if (course.id != lastWatched.courseId) continue;
 
           continueLearning = ContinueLearningProgress(
             course: course.toEntity(),
             completedLessons: progress.completedCountForCourse(
-              lastWatchedCourseId,
+              lastWatched.courseId,
             ),
-            totalLessons: videos.length,
+            totalLessons: lastWatched.totalLessons,
           );
           break;
         }

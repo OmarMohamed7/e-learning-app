@@ -33,13 +33,7 @@ final coursesByCategoryProvider =
       return ref.watch(courseRepositoryProvider).getCourses(category: category);
     });
 
-/// `autoDispose` so the list is refetched every time the course-details /
-/// video-player screens are (re)entered, rather than serving a stale
-/// in-memory cache — videos change status (processing → ready) frequently.
-final courseVideosProvider =
-    FutureProvider.autoDispose.family<List<VideoModel>, String>((
-      ref,
-      courseId,
-    ) {
+final courseVideosProvider = FutureProvider.autoDispose
+    .family<List<VideoModel>, String>((ref, courseId) {
       return ref.watch(courseRepositoryProvider).getCourseVideos(courseId);
     });

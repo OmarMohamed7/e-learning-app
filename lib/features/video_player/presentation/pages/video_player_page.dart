@@ -1,12 +1,84 @@
 import 'package:chewie/chewie.dart';
+import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../core/logging/console_app_logger.dart';
 import '../../../courses/data/models/video_model.dart';
 import '../../../courses/presentation/providers/courses_providers.dart';
 import '../../../progress/presentation/providers/progress_providers.dart';
+
+/// One playable rendition of an HLS master playlist (e.g. "720p").
+class HlsVariant {
+  const HlsVariant({
+    required this.uri,
+    required this.height,
+    required this.bandwidth,
+  });
+
+  final Uri uri;
+  final int? height;
+  final int bandwidth;
+
+  String get label =>
+      height != null ? '${height}p' : '${(bandwidth / 1000).round()} kbps';
+}
+
+/// Fetches [masterUrl] and parses its `#EXT-X-STREAM-INF` variants, highest
+/// quality first. Variant URIs in the playlist are relative to the master
+/// playlist's own location, not the site root.
+Future<List<HlsVariant>> _fetchHlsVariants(String masterUrl) async {
+  try {
+    final response = await Dio().get<String>(
+      masterUrl,
+      options: Options(responseType: ResponseType.plain),
+    );
+    final body = response.data;
+    if (body == null) return const [];
+
+    final baseUri = Uri.parse(masterUrl);
+    final lines = body.split('\n');
+    final variants = <HlsVariant>[];
+
+    for (var i = 0; i < lines.length; i++) {
+      final line = lines[i].trim();
+      if (!line.startsWith('#EXT-X-STREAM-INF:')) continue;
+
+      final bandwidthMatch = RegExp(r'BANDWIDTH=(\d+)').firstMatch(line);
+      final resolutionMatch = RegExp(r'RESOLUTION=\d+x(\d+)').firstMatch(line);
+
+      var uriLineIndex = i + 1;
+      while (uriLineIndex < lines.length &&
+          (lines[uriLineIndex].trim().isEmpty ||
+              lines[uriLineIndex].trim().startsWith('#'))) {
+        uriLineIndex++;
+      }
+      if (uriLineIndex >= lines.length) continue;
+
+      variants.add(
+        HlsVariant(
+          uri: baseUri.resolve(lines[uriLineIndex].trim()),
+          height: resolutionMatch != null
+              ? int.tryParse(resolutionMatch.group(1)!)
+              : null,
+          bandwidth: int.tryParse(bandwidthMatch?.group(1) ?? '') ?? 0,
+        ),
+      );
+      i = uriLineIndex;
+    }
+
+    variants.sort((a, b) => (b.height ?? 0).compareTo(a.height ?? 0));
+    return variants;
+  } on Exception catch (e) {
+    ConsoleAppLogger().error(
+      'Failed to parse HLS variants for $masterUrl',
+      error: e,
+    );
+    return const [];
+  }
+}
 
 class VideoPlayerPage extends ConsumerStatefulWidget {
   const VideoPlayerPage({
@@ -28,16 +100,61 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   String? _initializedUrl;
-  bool _initFailed = false;
+  late bool _initFailed;
   bool _completionMarked = false;
+  bool _lastWatchedRecorded = false;
+
+  String? _masterUrl;
+  List<HlsVariant> _variants = const [];
+  HlsVariant? _selectedVariant;
+
+  /// Bumped on every `_ensureInitialized` call; lets a call detect it's been
+  /// superseded by a newer one (e.g. rapid quality switches) and bail out
+  /// instead of clobbering the newer controller once its own await resolves.
+  int _initRequestId = 0;
 
   @override
   void initState() {
     super.initState();
+    _initFailed = false;
+
+    Future.microtask(() {
+      ref.listenManual(courseVideosProvider(widget.courseId), (_, next) {
+        next.whenData((videos) {
+          final video = _findVideo(videos);
+          final url = video?.masterPlaylistUrl;
+          if (url != null) {
+            // Only auto-initializes the first load; once a stream is
+            // playing, `_selectQuality` is the sole path for switching it
+            // (it needs to control autoPlay/seekTo, which this generic
+            // trigger doesn't know about).
+            if (_initializedUrl == null) {
+              _ensureInitialized(url);
+            }
+            _loadVariants(url);
+          }
+        });
+      });
+
+      final totalLessons = ref
+          .read(courseVideosProvider(widget.courseId))
+          .maybeWhen(data: (videos) => videos.length, orElse: () => 0);
+
+      _recordLastWatchedIfNeeded(totalLessons);
+    });
+  }
+
+  void _recordLastWatchedIfNeeded(int totalLessons) {
+    if (_lastWatchedRecorded) return;
+    _lastWatchedRecorded = true;
     Future.microtask(
       () => ref
           .read(progressControllerProvider.notifier)
-          .setLastWatchedCourse(widget.courseId, widget.courseTitle),
+          .setLastWatchedCourse(
+            widget.courseId,
+            widget.courseTitle,
+            totalLessons,
+          ),
     );
   }
 
@@ -48,10 +165,19 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
     super.dispose();
   }
 
-  Future<void> _ensureInitialized(String url) async {
+  Future<void> _ensureInitialized(
+    String url, {
+    bool autoPlay = false,
+    Duration? seekTo,
+  }) async {
     if (_initializedUrl == url) return;
     _initializedUrl = url;
     _completionMarked = false;
+    final requestId = ++_initRequestId;
+
+    ConsoleAppLogger().debug(
+      'Video player: initializing $url (autoPlay: $autoPlay, seekTo: $seekTo)',
+    );
 
     final oldChewie = _chewieController;
     final oldVideo = _videoController;
@@ -59,12 +185,28 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
     final controller = VideoPlayerController.networkUrl(Uri.parse(url));
     try {
       await controller.initialize();
-    } on Object {
-      if (!mounted) return;
+    } on Exception catch (e) {
+      ConsoleAppLogger().error(
+        'Failed to initialize video player for $url',
+        error: e,
+      );
+      if (!mounted || requestId != _initRequestId) return;
       setState(() => _initFailed = true);
       return;
     }
-    if (!mounted) return;
+
+    // A newer `_ensureInitialized` call started (and possibly finished)
+    // while this one was awaiting `initialize()` — e.g. rapid quality
+    // switches. Drop this stale result instead of overwriting the newer
+    // controller.
+    if (!mounted || requestId != _initRequestId) {
+      await controller.dispose();
+      return;
+    }
+
+    if (seekTo != null) {
+      await controller.seekTo(seekTo);
+    }
 
     controller.addListener(_onVideoProgress);
 
@@ -73,13 +215,78 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
       _videoController = controller;
       _chewieController = ChewieController(
         videoPlayerController: controller,
-        autoPlay: true,
+        autoPlay: autoPlay,
         looping: false,
+        // A function, not the list itself — Chewie calls this lazily when
+        // the options sheet opens, so it always reflects the latest
+        // `_variants`/`_selectedVariant` even if this controller was built
+        // before the playlist variants finished loading.
+        additionalOptions: _buildQualityOptions,
       );
     });
 
+    ConsoleAppLogger().debug('Video player: now playing $url');
+
     oldChewie?.dispose();
     await oldVideo?.dispose();
+  }
+
+  Future<void> _loadVariants(String masterUrl) async {
+    if (_masterUrl == masterUrl) return;
+    _masterUrl = masterUrl;
+
+    final variants = await _fetchHlsVariants(masterUrl);
+    if (!mounted) return;
+    setState(() => _variants = variants);
+  }
+
+  /// Quality picks shown in Chewie's own options sheet (the three-dot menu
+  /// in the player controls), alongside its built-in "Playback speed" entry.
+  List<OptionItem> _buildQualityOptions(BuildContext context) {
+    if (_variants.isEmpty) return const [];
+
+    return [
+      OptionItem(
+        onTap: (context) {
+          Navigator.pop(context);
+          _selectQuality(null);
+        },
+        iconData: _selectedVariant == null
+            ? Icons.check_circle
+            : Icons.radio_button_unchecked,
+        title: 'Auto',
+      ),
+      for (final variant in _variants)
+        OptionItem(
+          onTap: (context) {
+            Navigator.pop(context);
+            _selectQuality(variant);
+          },
+          iconData: _selectedVariant == variant
+              ? Icons.check_circle
+              : Icons.radio_button_unchecked,
+          title: variant.label,
+        ),
+    ];
+  }
+
+  Future<void> _selectQuality(HlsVariant? variant) async {
+    final masterUrl = _masterUrl;
+    ConsoleAppLogger().debug(
+      'Video player: quality selected -> ${variant?.label ?? "Auto"}',
+    );
+    if (masterUrl == null || variant == _selectedVariant) return;
+
+    final resumePosition = _videoController?.value.position;
+    final wasPlaying = _videoController?.value.isPlaying ?? false;
+
+    setState(() => _selectedVariant = variant);
+
+    await _ensureInitialized(
+      variant?.uri.toString() ?? masterUrl,
+      autoPlay: wasPlaying,
+      seekTo: resumePosition,
+    );
   }
 
   void _onVideoProgress() {
@@ -119,13 +326,18 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
       ),
       body: videosAsync.when(
         data: (videos) {
+          _recordLastWatchedIfNeeded(videos.length);
+
           final video = _findVideo(videos);
-          final url = video?.masterPlaylistUrl;
-          if (video == null || url == null) {
+          final masterUrl = video?.masterPlaylistUrl;
+          if (video == null || masterUrl == null) {
             return Center(child: Text('genericError'.tr()));
           }
 
-          _ensureInitialized(url);
+          if (_initializedUrl == null) {
+            _ensureInitialized(masterUrl);
+          }
+          _loadVariants(masterUrl);
 
           if (_initFailed) {
             return Center(child: Text('genericError'.tr()));
@@ -140,7 +352,13 @@ class _VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
           return Center(
             child: AspectRatio(
               aspectRatio: videoController.value.aspectRatio,
-              child: Chewie(controller: chewieController),
+              // Keyed by stream url so a quality switch fully remounts the
+              // player instead of Chewie potentially reusing stale internal
+              // state from the previous controller.
+              child: Chewie(
+                key: ValueKey(_initializedUrl),
+                controller: chewieController,
+              ),
             ),
           );
         },

@@ -33,20 +33,29 @@ class LocalProgressRepository implements IProgressRepository {
   }
 
   @override
-  String? getLastWatchedCourseId() {
-    return _isar.lastWatchedCourseIsars
-        .getSync(_lastWatchedCourseRowId)
-        ?.courseId;
+  LastWatchedCourse? getLastWatchedCourse() {
+    final row = _isar.lastWatchedCourseIsars.getSync(_lastWatchedCourseRowId);
+    if (row == null) return null;
+    return (
+      courseId: row.courseId,
+      courseTitle: row.courseTitle,
+      totalLessons: row.totalLessons,
+    );
   }
 
   @override
-  Future<void> setLastWatchedCourseId(String courseId, String courseTitle) {
+  Future<void> setLastWatchedCourse(
+    String courseId,
+    String courseTitle,
+    int totalLessons,
+  ) {
     return _isar.writeTxn(
       () => _isar.lastWatchedCourseIsars.put(
         LastWatchedCourseIsar()
           ..id = _lastWatchedCourseRowId
           ..courseId = courseId
-          ..courseTitle = courseTitle,
+          ..courseTitle = courseTitle
+          ..totalLessons = totalLessons,
       ),
     );
   }

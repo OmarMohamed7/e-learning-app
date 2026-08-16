@@ -11,4 +11,6 @@ class LastWatchedCourseIsar {
   late String courseId;
 
   late String courseTitle;
+
+  late int totalLessons;
 }

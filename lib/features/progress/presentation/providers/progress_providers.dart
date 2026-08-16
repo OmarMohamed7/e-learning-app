@@ -12,11 +12,11 @@ final Provider<IProgressRepository> progressRepositoryProvider =
 
 class ProgressState {
   const ProgressState({
-    required this.lastWatchedCourseId,
+    required this.lastWatchedCourse,
     required this.lessonProgress,
   });
 
-  final String? lastWatchedCourseId;
+  final LastWatchedCourse? lastWatchedCourse;
 
   /// Keyed by lessonId.
   final Map<String, LessonProgress> lessonProgress;
@@ -36,7 +36,7 @@ class ProgressController extends Notifier<ProgressState> {
   ProgressState build() {
     _repository = ref.watch(progressRepositoryProvider);
     return ProgressState(
-      lastWatchedCourseId: _repository.getLastWatchedCourseId(),
+      lastWatchedCourse: _repository.getLastWatchedCourse(),
       lessonProgress: {
         for (final progress in _repository.getAllProgress())
           progress.lessonId: progress,
@@ -44,11 +44,19 @@ class ProgressController extends Notifier<ProgressState> {
     );
   }
 
-  Future<void> setLastWatchedCourse(String courseId, String courseTitle) async {
-    if (state.lastWatchedCourseId == courseId) return;
-    await _repository.setLastWatchedCourseId(courseId, courseTitle);
+  Future<void> setLastWatchedCourse(
+    String courseId,
+    String courseTitle,
+    int totalLessons,
+  ) async {
+    if (state.lastWatchedCourse?.courseId == courseId) return;
+    await _repository.setLastWatchedCourse(courseId, courseTitle, totalLessons);
     state = ProgressState(
-      lastWatchedCourseId: courseId,
+      lastWatchedCourse: (
+        courseId: courseId,
+        courseTitle: courseTitle,
+        totalLessons: totalLessons,
+      ),
       lessonProgress: state.lessonProgress,
     );
   }
@@ -71,7 +79,7 @@ class ProgressController extends Notifier<ProgressState> {
 
     await _repository.saveLessonProgress(progress);
     state = ProgressState(
-      lastWatchedCourseId: state.lastWatchedCourseId,
+      lastWatchedCourse: state.lastWatchedCourse,
       lessonProgress: {...state.lessonProgress, lessonId: progress},
     );
   }

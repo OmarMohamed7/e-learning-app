@@ -28,6 +28,11 @@ const LastWatchedCourseIsarSchema = CollectionSchema(
       name: r'courseTitle',
       type: IsarType.string,
     ),
+    r'totalLessons': PropertySchema(
+      id: 2,
+      name: r'totalLessons',
+      type: IsarType.long,
+    ),
   },
 
   estimateSize: _lastWatchedCourseIsarEstimateSize,
@@ -64,6 +69,7 @@ void _lastWatchedCourseIsarSerialize(
 ) {
   writer.writeString(offsets[0], object.courseId);
   writer.writeString(offsets[1], object.courseTitle);
+  writer.writeLong(offsets[2], object.totalLessons);
 }
 
 LastWatchedCourseIsar _lastWatchedCourseIsarDeserialize(
@@ -76,6 +82,7 @@ LastWatchedCourseIsar _lastWatchedCourseIsarDeserialize(
   object.courseId = reader.readString(offsets[0]);
   object.courseTitle = reader.readString(offsets[1]);
   object.id = id;
+  object.totalLessons = reader.readLong(offsets[2]);
   return object;
 }
 
@@ -90,6 +97,8 @@ P _lastWatchedCourseIsarDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -637,6 +646,77 @@ extension LastWatchedCourseIsarQueryFilter
       );
     });
   }
+
+  QueryBuilder<
+    LastWatchedCourseIsar,
+    LastWatchedCourseIsar,
+    QAfterFilterCondition
+  >
+  totalLessonsEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'totalLessons', value: value),
+      );
+    });
+  }
+
+  QueryBuilder<
+    LastWatchedCourseIsar,
+    LastWatchedCourseIsar,
+    QAfterFilterCondition
+  >
+  totalLessonsGreaterThan(int value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'totalLessons',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    LastWatchedCourseIsar,
+    LastWatchedCourseIsar,
+    QAfterFilterCondition
+  >
+  totalLessonsLessThan(int value, {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'totalLessons',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<
+    LastWatchedCourseIsar,
+    LastWatchedCourseIsar,
+    QAfterFilterCondition
+  >
+  totalLessonsBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'totalLessons',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
 }
 
 extension LastWatchedCourseIsarQueryObject
@@ -684,6 +764,20 @@ extension LastWatchedCourseIsarQuerySortBy
       return query.addSortBy(r'courseTitle', Sort.desc);
     });
   }
+
+  QueryBuilder<LastWatchedCourseIsar, LastWatchedCourseIsar, QAfterSortBy>
+  sortByTotalLessons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalLessons', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LastWatchedCourseIsar, LastWatchedCourseIsar, QAfterSortBy>
+  sortByTotalLessonsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalLessons', Sort.desc);
+    });
+  }
 }
 
 extension LastWatchedCourseIsarQuerySortThenBy
@@ -729,6 +823,20 @@ extension LastWatchedCourseIsarQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<LastWatchedCourseIsar, LastWatchedCourseIsar, QAfterSortBy>
+  thenByTotalLessons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalLessons', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LastWatchedCourseIsar, LastWatchedCourseIsar, QAfterSortBy>
+  thenByTotalLessonsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalLessons', Sort.desc);
+    });
+  }
 }
 
 extension LastWatchedCourseIsarQueryWhereDistinct
@@ -744,6 +852,13 @@ extension LastWatchedCourseIsarQueryWhereDistinct
   distinctByCourseTitle({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'courseTitle', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<LastWatchedCourseIsar, LastWatchedCourseIsar, QDistinct>
+  distinctByTotalLessons() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totalLessons');
     });
   }
 }
@@ -772,6 +887,13 @@ extension LastWatchedCourseIsarQueryProperty
   courseTitleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'courseTitle');
+    });
+  }
+
+  QueryBuilder<LastWatchedCourseIsar, int, QQueryOperations>
+  totalLessonsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totalLessons');
     });
   }
 }
