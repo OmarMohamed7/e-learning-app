@@ -29,7 +29,5 @@ final FutureProvider<List<CourseModel>> coursesProvider =
 
 final coursesByCategoryProvider =
     FutureProvider.family<List<CourseModel>, String>((ref, category) {
-      return ref
-          .watch(courseRepositoryProvider)
-          .getCourses(category: category);
+      return ref.watch(courseRepositoryProvider).getCourses(category: category);
     });

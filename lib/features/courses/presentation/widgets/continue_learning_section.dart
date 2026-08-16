@@ -1,34 +1,38 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/course.dart';
 import '../models/continue_learning_progress.dart';
 import 'continue_learning_card.dart';
 
-/// The "Continue Learning" section. Renders nothing when [progress] is
-/// null, i.e. the learner has no course currently in progress.
-class ContinueLearningSection extends StatelessWidget {
-  const ContinueLearningSection({required this.progress, this.onTap, super.key});
+class ContinueLearningSection extends ConsumerWidget {
+  final ContinueLearningProgress? course;
+  final void Function(Course course)? onCourseTap;
 
-  final ContinueLearningProgress? progress;
-  final VoidCallback? onTap;
+  const ContinueLearningSection({super.key, this.course, this.onCourseTap});
 
   @override
-  Widget build(BuildContext context) {
-    final progress = this.progress;
-    if (progress == null) {
-      return const SizedBox.shrink();
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'continueLearningTitle'.tr(),
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 12),
-        ContinueLearningCard(progress: progress, onTap: onTap),
-      ],
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return course != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'continueLearningTitle'.tr(),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 12),
+              ContinueLearningCard(
+                progress: ContinueLearningProgress(
+                  course: course!.course,
+                  completedLessons: course!.completedLessons,
+                ),
+                onTap: () =>
+                    onCourseTap == null ? null : onCourseTap!(course!.course),
+              ),
+            ],
+          )
+        : const SizedBox.shrink();
   }
 }
