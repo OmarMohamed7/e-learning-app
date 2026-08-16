@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Central Material 3 theme definitions. Keeping this behind a single class
-/// (rather than inlining `ThemeData` in `app.dart`) makes theme tokens easy
-/// to find and reuse across screens.
-///
-/// Palette matches the MentorStream mock: a deep green brand color on white
-/// surfaces, filled pill inputs, and flat white cards with soft corners.
 abstract final class AppTheme {
   static const Color _seedColor = Color(0xFF2F6F52);
 
@@ -54,7 +48,8 @@ abstract final class AppTheme {
         centerTitle: true,
         titleTextStyle: base.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w700,
-          color: scheme.onSurface,
+          color: Colors.white,
+          fontSize: 20,
         ),
       ),
       cardTheme: CardThemeData(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/extensions/string_extensions.dart';
 import '../providers/courses_providers.dart';
 import '../widgets/popular_class_card.dart';
 
@@ -21,7 +22,7 @@ class CategoryCoursesPage extends ConsumerWidget {
     final coursesAsync = ref.watch(coursesByCategoryProvider(categoryId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(categoryName)),
+      appBar: AppBar(title: Text(categoryName.capitalizeFirst)),
       body: coursesAsync.when(
         data: (courses) {
           if (courses.isEmpty) {
