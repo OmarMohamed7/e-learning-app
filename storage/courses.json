@@ -1,0 +1,50 @@
+{
+  "f7cbcc34": {
+    "id": "f7cbcc34",
+    "title": "Business Fundamentals",
+    "description": "Core principles of running and growing a business.",
+    "instructor": {
+      "id": "instr-01",
+      "name": "Amara Chen"
+    },
+    "category": "business",
+    "thumbnail_url": "https://picsum.photos/seed/business/600/400",
+    "created_at": "2026-08-15T16:30:47.080342Z"
+  },
+  "4d8ae97e": {
+    "id": "4d8ae97e",
+    "title": "Personal Finance Essentials",
+    "description": "Budgeting, saving, and investing fundamentals.",
+    "instructor": {
+      "id": "instr-02",
+      "name": "David Osei"
+    },
+    "category": "finance",
+    "thumbnail_url": "https://picsum.photos/seed/finance/600/400",
+    "created_at": "2026-08-15T16:30:47.090044Z"
+  },
+  "1694e314": {
+    "id": "1694e314",
+    "title": "Intro to Programming",
+    "description": "Learn programming fundamentals with hands-on projects.",
+    "instructor": {
+      "id": "instr-03",
+      "name": "Priya Nair"
+    },
+    "category": "programming",
+    "thumbnail_url": "https://picsum.photos/seed/programming/600/400",
+    "created_at": "2026-08-15T16:30:47.097945Z"
+  },
+  "27cef91e": {
+    "id": "27cef91e",
+    "title": "UI/UX Design Basics",
+    "description": "Principles of user interface and user experience design.",
+    "instructor": {
+      "id": "instr-04",
+      "name": "Leo Fischer"
+    },
+    "category": "design",
+    "thumbnail_url": "https://picsum.photos/seed/design/600/400",
+    "created_at": "2026-08-15T16:30:47.105484Z"
+  }
+}
