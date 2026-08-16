@@ -24,10 +24,7 @@ class ContinueLearningSection extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               ContinueLearningCard(
-                progress: ContinueLearningProgress(
-                  course: course!.course,
-                  completedLessons: course!.completedLessons,
-                ),
+                progress: course!,
                 onTap: () =>
                     onCourseTap == null ? null : onCourseTap!(course!.course),
               ),

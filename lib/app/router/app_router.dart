@@ -57,6 +57,7 @@ final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => VideoPlayerPage(
               courseId: state.pathParameters['courseId']!,
               lessonId: state.pathParameters['lessonId']!,
+              courseTitle: state.uri.queryParameters['courseTitle']!,
             ),
           ),
         ],

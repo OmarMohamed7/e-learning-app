@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mentor_stream_flutter/core/network/network_providers.dart';
 import 'package:mentor_stream_flutter/features/courses/data/datasources/course_api.dart';
 import 'package:mentor_stream_flutter/features/courses/data/models/course_model.dart';
+import 'package:mentor_stream_flutter/features/courses/data/models/video_model.dart';
 import 'package:mentor_stream_flutter/features/courses/data/repositories/remote_course_repository.dart';
 import 'package:mentor_stream_flutter/features/courses/domain/repositories/i_courses_repo.dart';
 
@@ -30,4 +31,15 @@ final FutureProvider<List<CourseModel>> coursesProvider =
 final coursesByCategoryProvider =
     FutureProvider.family<List<CourseModel>, String>((ref, category) {
       return ref.watch(courseRepositoryProvider).getCourses(category: category);
+    });
+
+/// `autoDispose` so the list is refetched every time the course-details /
+/// video-player screens are (re)entered, rather than serving a stale
+/// in-memory cache — videos change status (processing → ready) frequently.
+final courseVideosProvider =
+    FutureProvider.autoDispose.family<List<VideoModel>, String>((
+      ref,
+      courseId,
+    ) {
+      return ref.watch(courseRepositoryProvider).getCourseVideos(courseId);
     });

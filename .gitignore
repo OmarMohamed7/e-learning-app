@@ -37,6 +37,11 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Isar native core library, auto-downloaded for `flutter test` on host
+/libisar.dylib
+/libisar.so
+/isar.dll
+
 # Symbolication related
 app.*.symbols
 

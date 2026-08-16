@@ -52,6 +52,11 @@ dependencies:
   retrofit: ^4.9.0
   dio: ^5.11.0
   shimmer: ^3.0.0
+  video_player: ^2.11.1
+  chewie: ^1.15.0
+  path_provider: ^2.1.6
+  isar_community: ^3.3.2
+  isar_community_flutter_libs: ^3.3.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +73,7 @@ dev_dependencies:
   freezed: ^3.2.5
   json_serializable: ^6.14.1
   retrofit_generator: ^10.0.1
+  isar_community_generator: ^3.3.2
 
 
 # For information on the generic Dart part of this file, see the

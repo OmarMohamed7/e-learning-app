@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../categories/presentation/widgets/categories_explore_section.dart';
-
+import '../../../progress/presentation/providers/progress_providers.dart';
 import '../models/continue_learning_progress.dart';
 import '../providers/courses_providers.dart';
 import '../widgets/continue_learning_section.dart';
@@ -16,6 +16,31 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coursesAsync = ref.watch(coursesProvider);
+    final progress = ref.watch(progressControllerProvider);
+
+    ContinueLearningProgress? continueLearning;
+    final lastWatchedCourseId = progress.lastWatchedCourseId;
+    if (lastWatchedCourseId != null) {
+      coursesAsync.whenData((courses) {
+        for (final course in courses) {
+          if (course.id != lastWatchedCourseId) continue;
+
+          final videos = ref
+              .watch(courseVideosProvider(lastWatchedCourseId))
+              .value;
+          if (videos == null) break;
+
+          continueLearning = ContinueLearningProgress(
+            course: course.toEntity(),
+            completedLessons: progress.completedCountForCourse(
+              lastWatchedCourseId,
+            ),
+            totalLessons: videos.length,
+          );
+          break;
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(),
@@ -35,15 +60,7 @@ class HomePage extends ConsumerWidget {
                       spacing: 28,
                       children: [
                         ContinueLearningSection(
-                          course: coursesAsync.maybeWhen(
-                            data: (courses) => courses.isNotEmpty
-                                ? ContinueLearningProgress(
-                                    course: courses.first.toEntity(),
-                                    completedLessons: 23,
-                                  )
-                                : null,
-                            orElse: () => null,
-                          ),
+                          course: continueLearning,
                           onCourseTap: (course) =>
                               context.push('/course/${course.id}'),
                         ),

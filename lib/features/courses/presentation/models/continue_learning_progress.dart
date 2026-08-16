@@ -8,12 +8,12 @@ class ContinueLearningProgress {
   const ContinueLearningProgress({
     required this.course,
     required this.completedLessons,
+    required this.totalLessons,
   });
 
   final Course course;
   final int completedLessons;
-
-  int get totalLessons => course.lessons.length;
+  final int totalLessons;
 
   double get completionRatio =>
       totalLessons == 0 ? 0 : completedLessons / totalLessons;
