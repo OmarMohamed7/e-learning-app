@@ -10,9 +10,9 @@ _InstructorModel _$InstructorModelFromJson(Map<String, dynamic> json) =>
     _InstructorModel(
       id: json['id'] as String,
       name: json['name'] as String,
-      headline: json['headline'] as String,
-      bio: json['bio'] as String,
-      avatarUrl: json['avatarUrl'] as String,
+      headline: json['headline'] as String? ?? '',
+      bio: json['bio'] as String? ?? '',
+      avatarUrl: json['avatarUrl'] as String? ?? '',
     );
 
 Map<String, dynamic> _$InstructorModelToJson(_InstructorModel instance) =>

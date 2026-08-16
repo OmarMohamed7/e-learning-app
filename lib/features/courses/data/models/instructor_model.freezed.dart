@@ -213,14 +213,14 @@ return $default(_that.id,_that.name,_that.headline,_that.bio,_that.avatarUrl);ca
 @JsonSerializable()
 
 class _InstructorModel extends InstructorModel {
-  const _InstructorModel({required this.id, required this.name, required this.headline, required this.bio, required this.avatarUrl}): super._();
+  const _InstructorModel({required this.id, required this.name, this.headline = '', this.bio = '', this.avatarUrl = ''}): super._();
   factory _InstructorModel.fromJson(Map<String, dynamic> json) => _$InstructorModelFromJson(json);
 
 @override final  String id;
 @override final  String name;
-@override final  String headline;
-@override final  String bio;
-@override final  String avatarUrl;
+@override@JsonKey() final  String headline;
+@override@JsonKey() final  String bio;
+@override@JsonKey() final  String avatarUrl;
 
 /// Create a copy of InstructorModel
 /// with the given fields replaced by the non-null parameter values.

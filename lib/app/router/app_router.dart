@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/account/presentation/pages/account_page.dart';
+import '../../features/courses/presentation/pages/category_courses_page.dart';
 import '../../features/courses/presentation/pages/course_details_page.dart';
 import '../../features/courses/presentation/pages/home_page.dart';
 import '../../features/courses/presentation/pages/my_courses_page.dart';
@@ -18,10 +19,7 @@ final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(
-                path: '/',
-                builder: (context, state) => const HomePage(),
-              ),
+              GoRoute(path: '/', builder: (context, state) => const HomePage()),
             ],
           ),
           StatefulShellBranch(
@@ -43,10 +41,16 @@ final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(
-        path: '/course/:courseId',
-        builder: (context, state) => CourseDetailsPage(
-          courseId: state.pathParameters['courseId']!,
+        path: '/category/:categoryId',
+        builder: (context, state) => CategoryCoursesPage(
+          categoryId: state.pathParameters['categoryId']!,
+          categoryName: state.uri.queryParameters['categoryName']!,
         ),
+      ),
+      GoRoute(
+        path: '/course/:courseId',
+        builder: (context, state) =>
+            CourseDetailsPage(courseId: state.pathParameters['courseId']!),
         routes: [
           GoRoute(
             path: 'lesson/:lessonId',

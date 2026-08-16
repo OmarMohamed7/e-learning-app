@@ -90,32 +90,45 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const HomeHeader(userName: 'Aaron'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+      body: Column(
+        children: [
+          const HomeHeader(userName: 'Aaron'),
+
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 28,
                 children: [
-                  ContinueLearningSection(
-                    progress: _continueLearningProgress,
-                    onTap: () =>
-                        _openCourse(context, _continueLearningProgress!.course),
-                  ),
-                  const CategoriesExploreSection(),
-                  MostPopularClassSection(
-                    courses: _sampleCourses,
-                    onCourseTap: (course) => _openCourse(context, course),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 28,
+                      children: [
+                        ContinueLearningSection(
+                          progress: _continueLearningProgress,
+                          onTap: () => _openCourse(
+                            context,
+                            _continueLearningProgress!.course,
+                          ),
+                        ),
+                        CategoriesExploreSection(
+                          onCategoryTap: (categoryId) => context.push(
+                            '/category/$categoryId?categoryName=${Uri.encodeComponent(categoryId)}',
+                          ),
+                        ),
+                        MostPopularClassSection(
+                          courses: _sampleCourses,
+                          onCourseTap: (course) => _openCourse(context, course),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -20,12 +20,13 @@ class _CourseApi implements CourseApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<CourseModel>> getCourses() async {
+  Future<CoursesResponseModel> getCourses({String? category}) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'category': category};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<CourseModel>>(
+    final _options = _setStreamType<CoursesResponseModel>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -35,12 +36,10 @@ class _CourseApi implements CourseApi {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<CourseModel> _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CoursesResponseModel _value;
     try {
-      _value = _result.data!
-          .map((dynamic i) => CourseModel.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = CoursesResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

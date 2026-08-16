@@ -10,9 +10,9 @@ abstract class InstructorModel with _$InstructorModel {
   const factory InstructorModel({
     required String id,
     required String name,
-    required String headline,
-    required String bio,
-    required String avatarUrl,
+    @Default('') String headline,
+    @Default('') String bio,
+    @Default('') String avatarUrl,
   }) = _InstructorModel;
 
   const InstructorModel._();

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/course_model.dart';
+import '../models/courses_response_model.dart';
 
 part 'course_api.g.dart';
 
@@ -10,7 +11,9 @@ abstract class CourseApi {
   factory CourseApi(Dio dio, {String? baseUrl}) = _CourseApi;
 
   @GET('/courses')
-  Future<List<CourseModel>> getCourses();
+  Future<CoursesResponseModel> getCourses({
+    @Query('category') String? category,
+  });
 
   @GET('/courses/{id}')
   Future<CourseModel> getCourse(@Path('id') String id);

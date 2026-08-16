@@ -4,8 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/section_header.dart';
 import '../providers/categories_providers.dart';
-import '../models/explore_topic.dart';
-import 'category_icon_mapper.dart';
+
 import 'explore_topics_row_shimmer.dart';
 import 'topic_item_widget.dart';
 
@@ -37,7 +36,7 @@ class CategoriesExploreSection extends ConsumerWidget {
                   topicName: category.name,
                   onTap: onCategoryTap == null
                       ? null
-                      : () => onCategoryTap!(category.name),
+                      : () => onCategoryTap!(category.id),
                 ),
             ],
           ),

@@ -15,9 +15,9 @@ abstract class CourseModel with _$CourseModel {
     required String description,
     required InstructorModel instructor,
     required String category,
-    required String thumbnailUrl,
-    required List<LessonModel> lessons,
-    required int totalDurationSeconds,
+    @JsonKey(name: 'thumbnail_url') required String thumbnailUrl,
+    @Default(<LessonModel>[]) List<LessonModel> lessons,
+    @Default(0) int totalDurationSeconds,
   }) = _CourseModel;
 
   const CourseModel._();

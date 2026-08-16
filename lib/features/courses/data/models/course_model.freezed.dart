@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CourseModel {
 
- String get id; String get title; String get description; InstructorModel get instructor; String get category; String get thumbnailUrl; List<LessonModel> get lessons; int get totalDurationSeconds;
+ String get id; String get title; String get description; InstructorModel get instructor; String get category;@JsonKey(name: 'thumbnail_url') String get thumbnailUrl; List<LessonModel> get lessons; int get totalDurationSeconds;
 /// Create a copy of CourseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CourseModelCopyWith<$Res>  {
   factory $CourseModelCopyWith(CourseModel value, $Res Function(CourseModel) _then) = _$CourseModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, InstructorModel instructor, String category, String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
+ String id, String title, String description, InstructorModel instructor, String category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
 });
 
 
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category,  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CourseModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -190,7 +190,7 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category,  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _CourseModel():
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -210,7 +210,7 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  InstructorModel instructor,  String category,  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _CourseModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -225,7 +225,7 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 @JsonSerializable()
 
 class _CourseModel extends CourseModel {
-  const _CourseModel({required this.id, required this.title, required this.description, required this.instructor, required this.category, required this.thumbnailUrl, required final  List<LessonModel> lessons, required this.totalDurationSeconds}): _lessons = lessons,super._();
+  const _CourseModel({required this.id, required this.title, required this.description, required this.instructor, required this.category, @JsonKey(name: 'thumbnail_url') required this.thumbnailUrl, final  List<LessonModel> lessons = const <LessonModel>[], this.totalDurationSeconds = 0}): _lessons = lessons,super._();
   factory _CourseModel.fromJson(Map<String, dynamic> json) => _$CourseModelFromJson(json);
 
 @override final  String id;
@@ -233,15 +233,15 @@ class _CourseModel extends CourseModel {
 @override final  String description;
 @override final  InstructorModel instructor;
 @override final  String category;
-@override final  String thumbnailUrl;
+@override@JsonKey(name: 'thumbnail_url') final  String thumbnailUrl;
  final  List<LessonModel> _lessons;
-@override List<LessonModel> get lessons {
+@override@JsonKey() List<LessonModel> get lessons {
   if (_lessons is EqualUnmodifiableListView) return _lessons;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_lessons);
 }
 
-@override final  int totalDurationSeconds;
+@override@JsonKey() final  int totalDurationSeconds;
 
 /// Create a copy of CourseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -276,7 +276,7 @@ abstract mixin class _$CourseModelCopyWith<$Res> implements $CourseModelCopyWith
   factory _$CourseModelCopyWith(_CourseModel value, $Res Function(_CourseModel) _then) = __$CourseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, InstructorModel instructor, String category, String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
+ String id, String title, String description, InstructorModel instructor, String category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
 });
 
 

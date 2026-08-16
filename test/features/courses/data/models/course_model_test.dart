@@ -32,7 +32,7 @@ void main() {
     'description': 'Learn Flutter from scratch.',
     'instructor': instructorJson,
     'category': 'mobile',
-    'thumbnailUrl': 'https://example.com/course.png',
+    'thumbnail_url': 'https://example.com/course.png',
     'lessons': [lessonJson],
     'totalDurationSeconds': 300,
   };

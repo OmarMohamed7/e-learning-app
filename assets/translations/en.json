@@ -19,5 +19,6 @@
   "topicDesign": "Design",
   "topicFinance": "Finance",
   "topicProgramming": "Programming",
-  "topicMarketing": "Marketing"
+  "topicMarketing": "Marketing",
+  "noCoursesFound": "No courses found for this topic yet."
 }
