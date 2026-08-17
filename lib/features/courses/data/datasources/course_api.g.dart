@@ -20,9 +20,15 @@ class _CourseApi implements CourseApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<CoursesResponseModel> getCourses({String? category}) async {
+  Future<CoursesResponseModel> getCourses({
+    String? category,
+    String? search,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'category': category};
+    final queryParameters = <String, dynamic>{
+      r'category': category,
+      r'search': search,
+    };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

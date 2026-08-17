@@ -19,6 +19,7 @@ class MentorStreamApp extends ConsumerWidget {
       routerConfig: router,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
+      debugShowCheckedModeBanner: false,
       themeMode: themeMode,
       locale: context.locale,
       supportedLocales: context.supportedLocales,

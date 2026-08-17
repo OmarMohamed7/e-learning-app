@@ -11,8 +11,11 @@ class RemoteCourseRepository implements ICourseRepository {
   final CourseApi _remoteDataSource;
 
   @override
-  Future<List<CourseModel>> getCourses({String? category}) async {
-    final response = await _remoteDataSource.getCourses(category: category);
+  Future<List<CourseModel>> getCourses({String? category, String? search}) async {
+    final response = await _remoteDataSource.getCourses(
+      category: category,
+      search: search,
+    );
     return response.items;
   }
 

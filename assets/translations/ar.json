@@ -20,5 +20,8 @@
   "topicFinance": "التمويل",
   "topicProgramming": "البرمجة",
   "topicMarketing": "التسويق",
-  "noCoursesFound": "لا توجد دورات لهذا الموضوع حتى الآن."
+  "noCoursesFound": "لا توجد دورات لهذا الموضوع حتى الآن.",
+  "searchTitle": "بحث",
+  "searchPrompt": "ابدأ الكتابة للبحث عن الدورات",
+  "noSearchResults": "لا توجد دورات مطابقة لبحثك."
 }

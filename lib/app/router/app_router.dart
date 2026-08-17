@@ -6,6 +6,7 @@ import '../../features/courses/presentation/pages/category_courses_page.dart';
 import '../../features/courses/presentation/pages/course_details_page.dart';
 import '../../features/courses/presentation/pages/home_page.dart';
 import '../../features/courses/presentation/pages/my_courses_page.dart';
+import '../../features/courses/presentation/pages/search_page.dart';
 import '../../features/video_player/presentation/pages/video_player_page.dart';
 import '../shell/main_shell.dart';
 
@@ -40,6 +41,7 @@ final Provider<GoRouter> goRouterProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+      GoRoute(path: '/search', builder: (context, state) => const SearchPage()),
       GoRoute(
         path: '/category/:categoryId',
         builder: (context, state) => CategoryCoursesPage(

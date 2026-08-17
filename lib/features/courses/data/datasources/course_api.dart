@@ -14,6 +14,7 @@ abstract class CourseApi {
   @GET('/courses')
   Future<CoursesResponseModel> getCourses({
     @Query('category') String? category,
+    @Query('search') String? search,
   });
 
   @GET('/courses/{id}')

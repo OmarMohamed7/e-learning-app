@@ -41,7 +41,10 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          const HomeHeader(userName: 'Aaron'),
+          HomeHeader(
+            userName: 'Omar',
+            onSearchTap: () => context.push('/search'),
+          ),
 
           Expanded(
             child: SingleChildScrollView(

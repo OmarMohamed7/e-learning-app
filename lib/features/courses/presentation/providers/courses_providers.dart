@@ -37,3 +37,8 @@ final courseVideosProvider = FutureProvider.autoDispose
     .family<List<VideoModel>, String>((ref, courseId) {
       return ref.watch(courseRepositoryProvider).getCourseVideos(courseId);
     });
+
+final courseSearchProvider = FutureProvider.autoDispose
+    .family<List<CourseModel>, String>((ref, query) {
+      return ref.watch(courseRepositoryProvider).getCourses(search: query);
+    });

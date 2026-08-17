@@ -11,14 +11,14 @@ class HomeHeader extends StatelessWidget {
     required this.userName,
     this.hasUnreadNotifications = false,
     this.onNotificationTap,
-    this.onSearchChanged,
+    this.onSearchTap,
     super.key,
   });
 
   final String userName;
   final bool hasUnreadNotifications;
   final VoidCallback? onNotificationTap;
-  final ValueChanged<String>? onSearchChanged;
+  final VoidCallback? onSearchTap;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,8 @@ class HomeHeader extends StatelessWidget {
               const SizedBox(height: 20),
               AppSearchField(
                 hintText: 'searchHint'.tr(),
-                onChanged: onSearchChanged,
+                readOnly: true,
+                onTap: onSearchTap,
               ),
             ],
           ),

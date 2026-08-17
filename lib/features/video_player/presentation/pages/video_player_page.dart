@@ -10,7 +10,6 @@ import '../../../courses/data/models/video_model.dart';
 import '../../../courses/presentation/providers/courses_providers.dart';
 import '../../../progress/presentation/providers/progress_providers.dart';
 
-/// One playable rendition of an HLS master playlist (e.g. "720p").
 class HlsVariant {
   const HlsVariant({
     required this.uri,

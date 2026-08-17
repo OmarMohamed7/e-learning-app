@@ -20,5 +20,8 @@
   "topicFinance": "Finance",
   "topicProgramming": "Programming",
   "topicMarketing": "Marketing",
-  "noCoursesFound": "No courses found for this topic yet."
+  "noCoursesFound": "No courses found for this topic yet.",
+  "searchTitle": "Search",
+  "searchPrompt": "Start typing to search courses",
+  "noSearchResults": "No courses match your search."
 }
