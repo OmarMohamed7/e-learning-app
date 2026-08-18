@@ -1,4 +1,4 @@
-# E-Learning (Mentor Stream)
+# E-Learning Platform
 
 Monorepo for the Mentor Stream e-learning app: a Flutter mobile client backed by a
 local FastAPI video server that handles HLS transcoding and streaming.
