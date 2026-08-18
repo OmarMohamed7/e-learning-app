@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/network/placeholder_image.dart';
+import '../../../categories/presentation/widgets/category_thumbnail_placeholder.dart';
 import '../models/continue_learning_progress.dart';
 
 /// Card showing a course thumbnail, title, and lesson-progress bar.
@@ -33,20 +35,23 @@ class ContinueLearningCard extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      progress.course.thumbnailUrl,
+                    child: SizedBox(
                       width: 64,
                       height: 64,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 64,
-                        height: 64,
-                        color: theme.colorScheme.primaryContainer,
-                        child: Icon(
-                          Icons.play_circle_outline_rounded,
-                          color: theme.colorScheme.onPrimaryContainer,
-                        ),
-                      ),
+                      child: isPlaceholderImageUrl(progress.course.thumbnailUrl)
+                          ? CategoryThumbnailPlaceholder(
+                              category: progress.course.category,
+                              iconSize: 28,
+                            )
+                          : Image.network(
+                              progress.course.thumbnailUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  CategoryThumbnailPlaceholder(
+                                    category: progress.course.category,
+                                    iconSize: 28,
+                                  ),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 12),

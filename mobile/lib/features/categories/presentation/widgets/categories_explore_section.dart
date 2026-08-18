@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/extensions/string_extensions.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../providers/categories_providers.dart';
 
@@ -34,7 +33,7 @@ class CategoriesExploreSection extends ConsumerWidget {
             children: [
               for (final category in categories)
                 TopicItem(
-                  topicName: category.name.capitalizeFirst,
+                  category: category,
                   onTap: onCategoryTap == null
                       ? null
                       : () => onCategoryTap!(category.id),
