@@ -1,9 +1,11 @@
+import asyncio
 import shutil
 import subprocess
 from pathlib import Path
 
 from app.core.config import HLS_DIR, HLS_SEGMENT_SECONDS, HLS_VARIANTS
-from app.models.video import VideoStatus
+from app.core.database import async_session_maker
+from app.models import VideoStatus
 from app.services import video_service
 
 
@@ -28,85 +30,28 @@ def _transcode_variant(input_path: Path, output_dir: Path, variant: dict) -> Non
     segment_pattern = output_dir / "segment_%03d.ts"
 
     command = [
-    "ffmpeg",
-
-    # Overwrite the output files if they already exist.
-    "-y",
-
-    # Input video file.
-    "-i", str(input_path),
-
-    # Resize the video while preserving the original aspect ratio.
-    # -2 means FFmpeg automatically calculates an even width.
-    # The height is the target HLS variant resolution.
-    "-vf", f"scale=-2:{variant['height']}",
-
-    # Use YUV 4:2:0 pixel format for broad device/browser compatibility.
-    "-pix_fmt", "yuv420p",
-
-    # Encode the video using H.264, which is widely supported
-    # by mobile devices, browsers, and HLS players.
-    "-c:v", "libx264",
-
-    # Use the H.264 Main profile for compatibility with a wide
-    # range of playback devices.
-    "-profile:v", "main",
-
-    # Constant Rate Factor controls the visual quality.
-    # Lower values generally mean higher quality and larger files.
-    "-crf", "20",
-
-    # Disable scene-change based keyframe insertion.
-    # This helps keep keyframe placement predictable for HLS segments.
-    "-sc_threshold", "0",
-
-    # Set the maximum GOP size to 48 frames.
-    # This controls how frequently keyframes are inserted.
-    "-g", "48",
-
-    # Set the minimum GOP size to 48 frames.
-    # Together with -g and -sc_threshold 0, this keeps keyframes
-    # at predictable intervals.
-    "-keyint_min", "48",
-
-    # Target video bitrate for this quality/resolution variant.
-    "-b:v", variant["video_bitrate"],
-
-    # Maximum allowed video bitrate.
-    # Prevents bitrate from exceeding the target too much.
-    "-maxrate", variant["video_bitrate"],
-
-    # Rate-control buffer size.
-    # Helps control bitrate fluctuations during encoding.
-    "-bufsize", variant["video_bitrate"],
-
-    # Encode the audio using AAC, a standard audio codec for HLS.
-    "-c:a", "aac",
-
-    # Target audio bitrate.
-    "-b:a", variant["audio_bitrate"],
-
-    # Audio sample rate: 48 kHz.
-    "-ar", "48000",
-
-    # Target duration of each HLS segment in seconds.
-    # Example: 6 seconds means the video is split into ~6-second chunks.
-    "-hls_time", str(HLS_SEGMENT_SECONDS),
-
-    # Mark the playlist as Video-on-Demand.
-    # FFmpeg will generate a complete playlist instead of a live playlist.
-    "-hls_playlist_type", "vod",
-
-    # Pattern used to generate the HLS media segments.
-    # Example:
-    # segment_000.ts
-    # segment_001.ts
-    # segment_002.ts
-    "-hls_segment_filename", str(segment_pattern),
-
-    # Output HLS playlist (.m3u8).
-    str(playlist_path),
-]
+        "ffmpeg",
+        "-y",
+        "-i", str(input_path),
+        "-vf", f"scale=-2:{variant['height']}",
+        "-pix_fmt", "yuv420p",
+        "-c:v", "libx264",
+        "-profile:v", "main",
+        "-crf", "20",
+        "-sc_threshold", "0",
+        "-g", "48",
+        "-keyint_min", "48",
+        "-b:v", variant["video_bitrate"],
+        "-maxrate", variant["video_bitrate"],
+        "-bufsize", variant["video_bitrate"],
+        "-c:a", "aac",
+        "-b:a", variant["audio_bitrate"],
+        "-ar", "48000",
+        "-hls_time", str(HLS_SEGMENT_SECONDS),
+        "-hls_playlist_type", "vod",
+        "-hls_segment_filename", str(segment_pattern),
+        str(playlist_path),
+    ]
 
     result = subprocess.run(command, capture_output=True, text=True)
     if result.returncode != 0:
@@ -138,7 +83,9 @@ def _write_master_playlist(output_dir: Path) -> None:
     (output_dir / "master.m3u8").write_text("\n".join(lines) + "\n")
 
 
-def process_video(video_id: str, input_path: Path) -> None:
+def _process_video_sync(
+    video_id: str, input_path: Path
+) -> tuple[VideoStatus, str | None, str | None, int | None]:
     output_dir = HLS_DIR / video_id
 
     try:
@@ -147,12 +94,21 @@ def process_video(video_id: str, input_path: Path) -> None:
             _transcode_variant(input_path, output_dir / name, variant)
         _write_master_playlist(output_dir)
     except (FFmpegNotFoundError, TranscodeError) as exc:
-        video_service.update_video_status(video_id, status=VideoStatus.FAILED, error=str(exc))
-        return
+        return VideoStatus.FAILED, None, str(exc), None
 
-    video_service.update_video_status(
-        video_id,
-        status=VideoStatus.READY,
-        hls_path=f"{video_id}/master.m3u8",
-        duration_seconds=_probe_duration_seconds(input_path),
-    )
+    duration = _probe_duration_seconds(input_path)
+    return VideoStatus.READY, f"{video_id}/master.m3u8", None, duration
+
+
+async def process_video(video_id: str, input_path: Path) -> None:
+    status, hls_path, error, duration = await asyncio.to_thread(_process_video_sync, video_id, input_path)
+
+    async with async_session_maker() as db:
+        await video_service.update_video_status(
+            db,
+            video_id,
+            status=status,
+            hls_path=hls_path,
+            error=error,
+            duration_seconds=duration,
+        )
