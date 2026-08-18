@@ -1,78 +1,86 @@
-import json
 import random
-import threading
 import uuid
+from datetime import datetime
 from itertools import groupby
 
-from app.core.config import COURSES_METADATA_FILE
-from app.models.course import Course
-from app.models.instructor import Instructor
-from app.models.video import VideoCategory
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models import Course, Instructor
 
 POPULAR_COURSES_TOTAL = 3
 
-_lock = threading.Lock()
+
+class InvalidReferenceError(ValueError):
+    pass
 
 
-def _load_all() -> dict[str, Course]:
-    if not COURSES_METADATA_FILE.exists():
-        return {}
-    raw = json.loads(COURSES_METADATA_FILE.read_text())
-    return {course_id: Course.model_validate(data) for course_id, data in raw.items()}
-
-
-def _save_all(courses: dict[str, Course]) -> None:
-    raw = {course_id: json.loads(course.model_dump_json()) for course_id, course in courses.items()}
-    COURSES_METADATA_FILE.write_text(json.dumps(raw, indent=2))
-
-
-def create_course(
+async def create_course(
+    db: AsyncSession,
     *,
     title: str,
     description: str,
     instructor: Instructor,
-    category: VideoCategory,
+    category_id: str,
     thumbnail_url: str,
 ) -> Course:
+    existing_instructor = await db.get(Instructor, instructor.id)
+    if existing_instructor is None:
+        db.add(Instructor(id=instructor.id, name=instructor.name))
+
+    # Use timezone-naive datetime to match TIMESTAMP WITHOUT TIME ZONE column
+    created_at = datetime.now()
+    if created_at.tzinfo is not None:
+        created_at = created_at.replace(tzinfo=None)
+
     course = Course(
         id=uuid.uuid4().hex[:8],
         title=title,
         description=description,
-        instructor=instructor,
-        category=category,
+        instructor_id=instructor.id,
+        category_id=category_id,
         thumbnail_url=thumbnail_url,
+        created_at=created_at,
     )
+    db.add(course)
 
-    with _lock:
-        courses = _load_all()
-        courses[course.id] = course
-        _save_all(courses)
+    try:
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        raise InvalidReferenceError(f"Invalid category_id '{category_id}'.") from exc
 
+    await db.refresh(course, attribute_names=["instructor", "category"])
     return course
 
 
-def get_course(course_id: str) -> Course | None:
-    with _lock:
-        return _load_all().get(course_id)
+async def get_course(db: AsyncSession, course_id: str) -> Course | None:
+    return await db.get(Course, course_id)
 
 
-def list_courses(category: VideoCategory | None = None, search: str | None = None) -> list[Course]:
-    with _lock:
-        courses = list(_load_all().values())
-    if category is not None:
-        courses = [course for course in courses if course.category == category]
+async def list_courses(
+    db: AsyncSession, category_id: str | None = None, search: str | None = None
+) -> list[Course]:
+    query = select(Course)
+    if category_id is not None:
+        query = query.where(Course.category_id == category_id)
     if search:
-        query = search.strip().lower()
-        courses = [course for course in courses if query in course.title.lower()]
-    return sorted(courses, key=lambda course: course.created_at, reverse=True)
+        query = query.where(Course.title.ilike(f"%{search.strip()}%"))
+    query = query.order_by(Course.created_at.desc())
+
+    result = await db.execute(query)
+    return list(result.scalars().all())
 
 
-def list_popular_courses() -> list[Course]:
-    with _lock:
-        courses = list(_load_all().values())
+async def list_popular_courses(db: AsyncSession) -> list[Course]:
+    result = await db.execute(select(Course))
+    courses = sorted(result.scalars().all(), key=lambda course: course.category_id)
 
-    courses.sort(key=lambda course: course.category)
-    by_category = {category: list(group) for category, group in groupby(courses, key=lambda course: course.category)}
+    by_category = {
+        category_id: list(group)
+        for category_id, group in groupby(courses, key=lambda course: course.category_id)
+    }
 
     categories = random.sample(list(by_category), k=min(POPULAR_COURSES_TOTAL, len(by_category)))
-    return [random.choice(by_category[category]) for category in categories]
+    return [random.choice(by_category[category_id]) for category_id in categories]
