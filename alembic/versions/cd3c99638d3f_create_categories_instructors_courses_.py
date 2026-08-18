@@ -69,3 +69,4 @@ def downgrade() -> None:
     op.drop_table('instructors')
     op.drop_table('categories')
     # ### end Alembic commands ###
+    sa.Enum(name='video_status').drop(op.get_bind(), checkfirst=True)
