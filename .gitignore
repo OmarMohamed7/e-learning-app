@@ -15,3 +15,6 @@ storage/originals/*
 storage/hls/*
 !storage/hls/.gitkeep
 storage/videos.json
+
+.env
+.superpowers/
