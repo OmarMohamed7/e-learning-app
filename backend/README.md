@@ -527,6 +527,15 @@ A production system would normally use object storage/CDN rather than FastAPI to
 
 # 15. HLS Quality Levels
 
+Quality variants are **manually configured in the backend, not auto-detected
+from the source video.** Each variant (name, height, video/audio bitrate,
+bandwidth, resolution) is a row in the `hls_variants` table, seeded via an
+Alembic migration. `hls_service._load_variants()` reads that table and
+transcodes every uploaded video into exactly those variants — there's no
+logic that inspects the source video's resolution/bitrate and picks
+variants automatically. To add, remove, or change a quality level, edit the
+`hls_variants` table (e.g. via a new migration), not the transcoding code.
+
 The first implementation should generate at least two variants:
 
 ```text

@@ -15,7 +15,18 @@ local FastAPI video server that handles HLS transcoding and streaming.
   them to HLS with FFmpeg, and serves categories, videos, and HLS playlists/segments
   to the mobile app. See [`backend/README.md`](backend/README.md) for the full spec.
 - **mobile/** — The Flutter app that browses courses/categories and plays videos via
-  the backend's HLS streams, with Firebase used for auth/data.
+  the backend's REST API and HLS streams. There's no auth — browsing is anonymous,
+  and per-lesson watch progress is stored locally on-device (Isar).
+
+### Video quality control
+
+HLS quality variants (e.g. `360p`/`720p`, their resolutions, and target bitrates)
+are **manually configured on the backend, not auto-detected from the uploaded
+video.** Each variant is a row in the `hls_variants` Postgres table, seeded via an
+Alembic migration; every upload gets transcoded into exactly those configured
+variants. To add, remove, or retune a quality level, edit that table (a new
+migration) — not the transcoding code itself. See
+[`backend/README.md` §15](backend/README.md#15-hls-quality-levels) for details.
 
 ## Architecture
 
@@ -28,7 +39,6 @@ mobile app's layering) see [`ARCHITECTURE.md`](ARCHITECTURE.md).
 - PostgreSQL 
 - FFmpeg (`ffmpeg -version` to check)
 - Flutter SDK (Dart ^3.11.5) and a configured iOS/Android toolchain
-- A Firebase project (for `flutterfire configure`)
 
 ## Running the backend
 
