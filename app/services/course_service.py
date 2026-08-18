@@ -1,6 +1,6 @@
 import random
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from itertools import groupby
 
 from sqlalchemy import select
@@ -29,10 +29,8 @@ async def create_course(
     if existing_instructor is None:
         db.add(Instructor(id=instructor.id, name=instructor.name))
 
-    # Use timezone-naive datetime to match TIMESTAMP WITHOUT TIME ZONE column
-    created_at = datetime.now()
-    if created_at.tzinfo is not None:
-        created_at = created_at.replace(tzinfo=None)
+    # Use UTC time with timezone stripped to match TIMESTAMP WITHOUT TIME ZONE column
+    created_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
     course = Course(
         id=uuid.uuid4().hex[:8],
