@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LessonModel {
 
- String get id; String get courseId; String get title; String get description; int get order; int get durationSeconds; String get thumbnailUrl; String? get masterPlaylistUrl;
+ String get id; String get title; String get description; int get order;@JsonKey(name: 'duration_seconds') int get durationSeconds;@JsonKey(name: 'video_url') String get videoUrl;
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LessonModelCopyWith<LessonModel> get copyWith => _$LessonModelCopyWithImpl<Less
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.courseId, courseId) || other.courseId == courseId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.order, order) || other.order == order)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.masterPlaylistUrl, masterPlaylistUrl) || other.masterPlaylistUrl == masterPlaylistUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.order, order) || other.order == order)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.videoUrl, videoUrl) || other.videoUrl == videoUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,courseId,title,description,order,durationSeconds,thumbnailUrl,masterPlaylistUrl);
+int get hashCode => Object.hash(runtimeType,id,title,description,order,durationSeconds,videoUrl);
 
 @override
 String toString() {
-  return 'LessonModel(id: $id, courseId: $courseId, title: $title, description: $description, order: $order, durationSeconds: $durationSeconds, thumbnailUrl: $thumbnailUrl, masterPlaylistUrl: $masterPlaylistUrl)';
+  return 'LessonModel(id: $id, title: $title, description: $description, order: $order, durationSeconds: $durationSeconds, videoUrl: $videoUrl)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LessonModelCopyWith<$Res>  {
   factory $LessonModelCopyWith(LessonModel value, $Res Function(LessonModel) _then) = _$LessonModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String courseId, String title, String description, int order, int durationSeconds, String thumbnailUrl, String? masterPlaylistUrl
+ String id, String title, String description, int order,@JsonKey(name: 'duration_seconds') int durationSeconds,@JsonKey(name: 'video_url') String videoUrl
 });
 
 
@@ -65,17 +65,15 @@ class _$LessonModelCopyWithImpl<$Res>
 
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? courseId = null,Object? title = null,Object? description = null,Object? order = null,Object? durationSeconds = null,Object? thumbnailUrl = null,Object? masterPlaylistUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? order = null,Object? durationSeconds = null,Object? videoUrl = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,courseId: null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
 as int,durationSeconds: null == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
-as int,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-as String,masterPlaylistUrl: freezed == masterPlaylistUrl ? _self.masterPlaylistUrl : masterPlaylistUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,videoUrl: null == videoUrl ? _self.videoUrl : videoUrl // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -160,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String courseId,  String title,  String description,  int order,  int durationSeconds,  String thumbnailUrl,  String? masterPlaylistUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int order, @JsonKey(name: 'duration_seconds')  int durationSeconds, @JsonKey(name: 'video_url')  String videoUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LessonModel() when $default != null:
-return $default(_that.id,_that.courseId,_that.title,_that.description,_that.order,_that.durationSeconds,_that.thumbnailUrl,_that.masterPlaylistUrl);case _:
+return $default(_that.id,_that.title,_that.description,_that.order,_that.durationSeconds,_that.videoUrl);case _:
   return orElse();
 
 }
@@ -181,10 +179,10 @@ return $default(_that.id,_that.courseId,_that.title,_that.description,_that.orde
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String courseId,  String title,  String description,  int order,  int durationSeconds,  String thumbnailUrl,  String? masterPlaylistUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int order, @JsonKey(name: 'duration_seconds')  int durationSeconds, @JsonKey(name: 'video_url')  String videoUrl)  $default,) {final _that = this;
 switch (_that) {
 case _LessonModel():
-return $default(_that.id,_that.courseId,_that.title,_that.description,_that.order,_that.durationSeconds,_that.thumbnailUrl,_that.masterPlaylistUrl);case _:
+return $default(_that.id,_that.title,_that.description,_that.order,_that.durationSeconds,_that.videoUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +199,10 @@ return $default(_that.id,_that.courseId,_that.title,_that.description,_that.orde
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String courseId,  String title,  String description,  int order,  int durationSeconds,  String thumbnailUrl,  String? masterPlaylistUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int order, @JsonKey(name: 'duration_seconds')  int durationSeconds, @JsonKey(name: 'video_url')  String videoUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _LessonModel() when $default != null:
-return $default(_that.id,_that.courseId,_that.title,_that.description,_that.order,_that.durationSeconds,_that.thumbnailUrl,_that.masterPlaylistUrl);case _:
+return $default(_that.id,_that.title,_that.description,_that.order,_that.durationSeconds,_that.videoUrl);case _:
   return null;
 
 }
@@ -216,17 +214,15 @@ return $default(_that.id,_that.courseId,_that.title,_that.description,_that.orde
 @JsonSerializable()
 
 class _LessonModel extends LessonModel {
-  const _LessonModel({required this.id, required this.courseId, required this.title, required this.description, required this.order, required this.durationSeconds, required this.thumbnailUrl, this.masterPlaylistUrl}): super._();
+  const _LessonModel({required this.id, required this.title, required this.description, required this.order, @JsonKey(name: 'duration_seconds') required this.durationSeconds, @JsonKey(name: 'video_url') required this.videoUrl}): super._();
   factory _LessonModel.fromJson(Map<String, dynamic> json) => _$LessonModelFromJson(json);
 
 @override final  String id;
-@override final  String courseId;
 @override final  String title;
 @override final  String description;
 @override final  int order;
-@override final  int durationSeconds;
-@override final  String thumbnailUrl;
-@override final  String? masterPlaylistUrl;
+@override@JsonKey(name: 'duration_seconds') final  int durationSeconds;
+@override@JsonKey(name: 'video_url') final  String videoUrl;
 
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.courseId, courseId) || other.courseId == courseId)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.order, order) || other.order == order)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.masterPlaylistUrl, masterPlaylistUrl) || other.masterPlaylistUrl == masterPlaylistUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LessonModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.order, order) || other.order == order)&&(identical(other.durationSeconds, durationSeconds) || other.durationSeconds == durationSeconds)&&(identical(other.videoUrl, videoUrl) || other.videoUrl == videoUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,courseId,title,description,order,durationSeconds,thumbnailUrl,masterPlaylistUrl);
+int get hashCode => Object.hash(runtimeType,id,title,description,order,durationSeconds,videoUrl);
 
 @override
 String toString() {
-  return 'LessonModel(id: $id, courseId: $courseId, title: $title, description: $description, order: $order, durationSeconds: $durationSeconds, thumbnailUrl: $thumbnailUrl, masterPlaylistUrl: $masterPlaylistUrl)';
+  return 'LessonModel(id: $id, title: $title, description: $description, order: $order, durationSeconds: $durationSeconds, videoUrl: $videoUrl)';
 }
 
 
@@ -261,7 +257,7 @@ abstract mixin class _$LessonModelCopyWith<$Res> implements $LessonModelCopyWith
   factory _$LessonModelCopyWith(_LessonModel value, $Res Function(_LessonModel) _then) = __$LessonModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String courseId, String title, String description, int order, int durationSeconds, String thumbnailUrl, String? masterPlaylistUrl
+ String id, String title, String description, int order,@JsonKey(name: 'duration_seconds') int durationSeconds,@JsonKey(name: 'video_url') String videoUrl
 });
 
 
@@ -278,17 +274,15 @@ class __$LessonModelCopyWithImpl<$Res>
 
 /// Create a copy of LessonModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? courseId = null,Object? title = null,Object? description = null,Object? order = null,Object? durationSeconds = null,Object? thumbnailUrl = null,Object? masterPlaylistUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? order = null,Object? durationSeconds = null,Object? videoUrl = null,}) {
   return _then(_LessonModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,courseId: null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
 as int,durationSeconds: null == durationSeconds ? _self.durationSeconds : durationSeconds // ignore: cast_nullable_to_non_nullable
-as int,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
-as String,masterPlaylistUrl: freezed == masterPlaylistUrl ? _self.masterPlaylistUrl : masterPlaylistUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,videoUrl: null == videoUrl ? _self.videoUrl : videoUrl // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

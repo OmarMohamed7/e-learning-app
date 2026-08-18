@@ -8,7 +8,7 @@ local FastAPI video server that handles HLS transcoding and streaming.
 ├── backend/   FastAPI HLS video server (Python, PostgreSQL, FFmpeg)
 └── mobile/    Flutter client app (iOS/Android)
 ```
-v
+
 ## Overview
 
 - **backend/** — A local FastAPI server that accepts uploaded MP4 videos, transcodes
@@ -16,6 +16,11 @@ v
   to the mobile app. See [`backend/README.md`](backend/README.md) for the full spec.
 - **mobile/** — The Flutter app that browses courses/categories and plays videos via
   the backend's HLS streams, with Firebase used for auth/data.
+
+## Architecture
+
+For how the two projects fit together (request flow, the HLS pipeline, and the
+mobile app's layering) see [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ## Prerequisites
 
@@ -46,8 +51,11 @@ The API docs are then available at `http://localhost:8000/docs`.
 cd mobile
 flutter pub get
 
+# Generates firebase_options.dart for your Firebase project
+flutterfire configure
+
 # Generates freezed/json_serializable/retrofit/isar code
-dart run build_runner build
+dart run build_runner build --delete-conflicting-outputs
 
 flutter run
 ```

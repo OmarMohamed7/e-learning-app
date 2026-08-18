@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../categories/data/models/category_model.dart';
 import '../../domain/entities/course.dart';
 import 'instructor_model.dart';
 import 'lesson_model.dart';
@@ -14,27 +15,16 @@ abstract class CourseModel with _$CourseModel {
     required String title,
     required String description,
     required InstructorModel instructor,
-    required String category,
+    required CategoryModel category,
     @JsonKey(name: 'thumbnail_url') required String thumbnailUrl,
     @Default(<LessonModel>[]) List<LessonModel> lessons,
-    @Default(0) int totalDurationSeconds,
+    @JsonKey(name: 'total_duration_seconds') @Default(0) int totalDurationSeconds,
   }) = _CourseModel;
 
   const CourseModel._();
 
   factory CourseModel.fromJson(Map<String, dynamic> json) =>
       _$CourseModelFromJson(json);
-
-  factory CourseModel.fromEntity(Course entity) => CourseModel(
-    id: entity.id,
-    title: entity.title,
-    description: entity.description,
-    instructor: InstructorModel.fromEntity(entity.instructor),
-    category: entity.category,
-    thumbnailUrl: entity.thumbnailUrl,
-    lessons: entity.lessons.map(LessonModel.fromEntity).toList(),
-    totalDurationSeconds: entity.totalDurationSeconds,
-  );
 
   Course toEntity() => Course(
     id: id,
@@ -43,7 +33,7 @@ abstract class CourseModel with _$CourseModel {
     instructor: instructor.toEntity(),
     category: category,
     thumbnailUrl: thumbnailUrl,
-    lessons: lessons.map((lesson) => lesson.toEntity()).toList(),
+    lessons: lessons.map((lesson) => lesson.toEntity(courseId: id)).toList(),
     totalDurationSeconds: totalDurationSeconds,
   );
 }

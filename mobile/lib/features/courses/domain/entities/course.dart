@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../categories/data/models/category_model.dart';
 import 'instructor.dart';
 import 'lesson.dart';
 
@@ -19,11 +20,10 @@ class Course extends Equatable {
   final String title;
   final String description;
 
-  /// Embedded, not just an id — mirrors how a Firestore course document will
-  /// realistically denormalize an instructor snapshot to avoid a second read
-  /// on the course-details screen.
+  /// Embedded, not just an id — the API joins and denormalizes the
+  /// instructor row to avoid a second request on the course-details screen.
   final Instructor instructor;
-  final String category;
+  final CategoryModel category;
   final String thumbnailUrl;
   final List<Lesson> lessons;
   final int totalDurationSeconds;

@@ -5,8 +5,6 @@ import 'package:isar_community/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app/app.dart';
-import 'core/firebase/firebase_bootstrap.dart';
-import 'core/logging/console_app_logger.dart';
 import 'core/storage/isar_provider.dart';
 import 'features/progress/data/models/last_watched_course_isar.dart';
 import 'features/progress/data/models/lesson_progress_isar.dart';
@@ -14,9 +12,6 @@ import 'features/progress/data/models/lesson_progress_isar.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
-  final logger = ConsoleAppLogger();
-  await initializeFirebase(logger);
 
   final isarDirectory = await getApplicationDocumentsDirectory();
   final isar = await Isar.open(

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CourseModel {
 
- String get id; String get title; String get description; InstructorModel get instructor; String get category;@JsonKey(name: 'thumbnail_url') String get thumbnailUrl; List<LessonModel> get lessons; int get totalDurationSeconds;
+ String get id; String get title; String get description; InstructorModel get instructor; CategoryModel get category;@JsonKey(name: 'thumbnail_url') String get thumbnailUrl; List<LessonModel> get lessons;@JsonKey(name: 'total_duration_seconds') int get totalDurationSeconds;
 /// Create a copy of CourseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $CourseModelCopyWith<$Res>  {
   factory $CourseModelCopyWith(CourseModel value, $Res Function(CourseModel) _then) = _$CourseModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, InstructorModel instructor, String category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
+ String id, String title, String description, InstructorModel instructor, CategoryModel category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons,@JsonKey(name: 'total_duration_seconds') int totalDurationSeconds
 });
 
 
-$InstructorModelCopyWith<$Res> get instructor;
+$InstructorModelCopyWith<$Res> get instructor;$CategoryModelCopyWith<$Res> get category;
 
 }
 /// @nodoc
@@ -72,7 +72,7 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,instructor: null == instructor ? _self.instructor : instructor // ignore: cast_nullable_to_non_nullable
 as InstructorModel,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as String,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as CategoryModel,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String,lessons: null == lessons ? _self.lessons : lessons // ignore: cast_nullable_to_non_nullable
 as List<LessonModel>,totalDurationSeconds: null == totalDurationSeconds ? _self.totalDurationSeconds : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
 as int,
@@ -86,6 +86,15 @@ $InstructorModelCopyWith<$Res> get instructor {
   
   return $InstructorModelCopyWith<$Res>(_self.instructor, (value) {
     return _then(_self.copyWith(instructor: value));
+  });
+}/// Create a copy of CourseModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryModelCopyWith<$Res> get category {
+  
+  return $CategoryModelCopyWith<$Res>(_self.category, (value) {
+    return _then(_self.copyWith(category: value));
   });
 }
 }
@@ -169,7 +178,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  CategoryModel category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons, @JsonKey(name: 'total_duration_seconds')  int totalDurationSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CourseModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -190,7 +199,7 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  InstructorModel instructor,  CategoryModel category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons, @JsonKey(name: 'total_duration_seconds')  int totalDurationSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _CourseModel():
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -210,7 +219,7 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  InstructorModel instructor,  String category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons,  int totalDurationSeconds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  InstructorModel instructor,  CategoryModel category, @JsonKey(name: 'thumbnail_url')  String thumbnailUrl,  List<LessonModel> lessons, @JsonKey(name: 'total_duration_seconds')  int totalDurationSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _CourseModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.instructor,_that.category,_that.thumbnailUrl,_that.lessons,_that.totalDurationSeconds);case _:
@@ -225,14 +234,14 @@ return $default(_that.id,_that.title,_that.description,_that.instructor,_that.ca
 @JsonSerializable()
 
 class _CourseModel extends CourseModel {
-  const _CourseModel({required this.id, required this.title, required this.description, required this.instructor, required this.category, @JsonKey(name: 'thumbnail_url') required this.thumbnailUrl, final  List<LessonModel> lessons = const <LessonModel>[], this.totalDurationSeconds = 0}): _lessons = lessons,super._();
+  const _CourseModel({required this.id, required this.title, required this.description, required this.instructor, required this.category, @JsonKey(name: 'thumbnail_url') required this.thumbnailUrl, final  List<LessonModel> lessons = const <LessonModel>[], @JsonKey(name: 'total_duration_seconds') this.totalDurationSeconds = 0}): _lessons = lessons,super._();
   factory _CourseModel.fromJson(Map<String, dynamic> json) => _$CourseModelFromJson(json);
 
 @override final  String id;
 @override final  String title;
 @override final  String description;
 @override final  InstructorModel instructor;
-@override final  String category;
+@override final  CategoryModel category;
 @override@JsonKey(name: 'thumbnail_url') final  String thumbnailUrl;
  final  List<LessonModel> _lessons;
 @override@JsonKey() List<LessonModel> get lessons {
@@ -241,7 +250,7 @@ class _CourseModel extends CourseModel {
   return EqualUnmodifiableListView(_lessons);
 }
 
-@override@JsonKey() final  int totalDurationSeconds;
+@override@JsonKey(name: 'total_duration_seconds') final  int totalDurationSeconds;
 
 /// Create a copy of CourseModel
 /// with the given fields replaced by the non-null parameter values.
@@ -276,11 +285,11 @@ abstract mixin class _$CourseModelCopyWith<$Res> implements $CourseModelCopyWith
   factory _$CourseModelCopyWith(_CourseModel value, $Res Function(_CourseModel) _then) = __$CourseModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, InstructorModel instructor, String category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons, int totalDurationSeconds
+ String id, String title, String description, InstructorModel instructor, CategoryModel category,@JsonKey(name: 'thumbnail_url') String thumbnailUrl, List<LessonModel> lessons,@JsonKey(name: 'total_duration_seconds') int totalDurationSeconds
 });
 
 
-@override $InstructorModelCopyWith<$Res> get instructor;
+@override $InstructorModelCopyWith<$Res> get instructor;@override $CategoryModelCopyWith<$Res> get category;
 
 }
 /// @nodoc
@@ -300,7 +309,7 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,instructor: null == instructor ? _self.instructor : instructor // ignore: cast_nullable_to_non_nullable
 as InstructorModel,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as String,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as CategoryModel,thumbnailUrl: null == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String,lessons: null == lessons ? _self._lessons : lessons // ignore: cast_nullable_to_non_nullable
 as List<LessonModel>,totalDurationSeconds: null == totalDurationSeconds ? _self.totalDurationSeconds : totalDurationSeconds // ignore: cast_nullable_to_non_nullable
 as int,
@@ -315,6 +324,15 @@ $InstructorModelCopyWith<$Res> get instructor {
   
   return $InstructorModelCopyWith<$Res>(_self.instructor, (value) {
     return _then(_self.copyWith(instructor: value));
+  });
+}/// Create a copy of CourseModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CategoryModelCopyWith<$Res> get category {
+  
+  return $CategoryModelCopyWith<$Res>(_self.category, (value) {
+    return _then(_self.copyWith(category: value));
   });
 }
 }
