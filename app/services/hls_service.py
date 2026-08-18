@@ -31,25 +31,82 @@ def _transcode_variant(input_path: Path, output_dir: Path, variant: dict) -> Non
 
     command = [
         "ffmpeg",
+
+        # Overwrite the output files if they already exist.
         "-y",
+
+        # Input video file.
         "-i", str(input_path),
+
+        # Resize the video while preserving the original aspect ratio.
+        # -2 means FFmpeg automatically calculates an even width.
+        # The height is the target HLS variant resolution.
         "-vf", f"scale=-2:{variant['height']}",
+
+        # Use YUV 4:2:0 pixel format for broad device/browser compatibility.
         "-pix_fmt", "yuv420p",
+
+        # Encode the video using H.264, which is widely supported
+        # by mobile devices, browsers, and HLS players.
         "-c:v", "libx264",
+
+        # Use the H.264 Main profile for compatibility with a wide
+        # range of playback devices.
         "-profile:v", "main",
+
+        # Constant Rate Factor controls the visual quality.
+        # Lower values generally mean higher quality and larger files.
         "-crf", "20",
+
+        # Disable scene-change based keyframe insertion.
+        # This helps keep keyframe placement predictable for HLS segments.
         "-sc_threshold", "0",
+
+        # Set the maximum GOP size to 48 frames.
+        # This controls how frequently keyframes are inserted.
         "-g", "48",
+
+        # Set the minimum GOP size to 48 frames.
+        # Together with -g and -sc_threshold 0, this keeps keyframes
+        # at predictable intervals.
         "-keyint_min", "48",
+
+        # Target video bitrate for this quality/resolution variant.
         "-b:v", variant["video_bitrate"],
+
+        # Maximum allowed video bitrate.
+        # Prevents bitrate from exceeding the target too much.
         "-maxrate", variant["video_bitrate"],
+
+        # Rate-control buffer size.
+        # Helps control bitrate fluctuations during encoding.
         "-bufsize", variant["video_bitrate"],
+
+        # Encode the audio using AAC, a standard audio codec for HLS.
         "-c:a", "aac",
+
+        # Target audio bitrate.
         "-b:a", variant["audio_bitrate"],
+
+        # Audio sample rate: 48 kHz.
         "-ar", "48000",
+
+        # Target duration of each HLS segment in seconds.
+        # Example: 6 seconds means the video is split into ~6-second chunks.
         "-hls_time", str(HLS_SEGMENT_SECONDS),
+
+        # Mark the playlist as Video-on-Demand.
+        # FFmpeg will generate a complete playlist instead of a live playlist.
         "-hls_playlist_type", "vod",
+
+        # Pattern used to generate the HLS media segments.
+        # Example:
+        # segment_000.ts
+        # segment_001.ts
+        # segment_002.ts
         "-hls_segment_filename", str(segment_pattern),
+
+        # Output HLS playlist (.m3u8).
         str(playlist_path),
     ]
 
