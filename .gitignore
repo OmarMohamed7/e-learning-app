@@ -54,3 +54,6 @@ app.*.map.json
 /android/app/release
 
 mux-access-token-Mentor Stream App.env
+
+# Firebase config (contains project-specific keys, kept local only)
+/android/app/google-services.json
