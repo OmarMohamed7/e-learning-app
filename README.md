@@ -141,15 +141,9 @@ local-hls-server/
 
 ## Storage
 
-For the first version:
+Original video files and generated HLS output live on the local filesystem.
 
-```text
-Local filesystem
-```
-
-No database is required initially.
-
-Video metadata can be stored in a simple JSON file or SQLite.
+Video and course metadata are persisted in PostgreSQL (via SQLAlchemy async + Alembic migrations). Earlier versions of this project used a JSON file instead; that data model has since been migrated to Postgres (see `scripts/migrate_json_to_postgres.py`).
 
 A recommended progression is:
 
@@ -159,6 +153,33 @@ Version 2 → SQLite
 Version 3 → PostgreSQL
 Version 4 → Cloud storage + Mux
 ```
+
+This project is currently at Version 3.
+
+---
+
+# 1a. Setup
+
+1. Create the Postgres database:
+   ```bash
+   createdb mentor_stream
+   ```
+2. Copy the example env file and adjust `DATABASE_URL` if your local Postgres setup differs:
+   ```bash
+   cp .env.example .env
+   ```
+3. Apply the database schema:
+   ```bash
+   uv run alembic upgrade head
+   ```
+4. (Optional) Seed the database from the legacy JSON metadata files, if present under `storage/`:
+   ```bash
+   uv run python scripts/migrate_json_to_postgres.py
+   ```
+5. Start the server:
+   ```bash
+   uv run uvicorn app.main:app --reload
+   ```
 
 ---
 
