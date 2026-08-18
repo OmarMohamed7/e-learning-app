@@ -1,18 +1,39 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
+# ===== Common =====
 .DS_Store
+*.log
+*.swp
+.env
+*.env
+.superpowers/
+
+# ===== Backend (Python / FastAPI) =====
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local video storage (generated at runtime)
+backend/storage/originals/*
+!backend/storage/originals/.gitkeep
+backend/storage/hls/*
+!backend/storage/hls/.gitkeep
+backend/storage/videos.json
+
+# ===== Mobile (Flutter / Dart) =====
 
 # Secrets / local-only config
-*.env
-mux-access-token-*.env
-/android/app/google-services.json
-/ios/Runner/GoogleService-Info.plist
+mobile/mux-access-token-*.env
+/mobile/android/app/google-services.json
+/mobile/ios/Runner/GoogleService-Info.plist
+mobile/lib/firebase_options.dart
 
 # Local-only media (hosted on Mux, not bundled as Flutter assets)
-/assets/videos/
+/mobile/assets/videos/
 
 .atom/
 .build/
@@ -47,8 +68,8 @@ captures/
 .pub-cache/
 .pub-preload-cache/
 .pub/
-/build/
-/coverage/
+/mobile/build/
+/mobile/coverage/
 analysis_benchmark.json
 flutter_*.png
 linked_*.ds
@@ -57,9 +78,9 @@ unlinked_spec.ds
 version
 
 # Isar native core library, auto-downloaded for `flutter test` on host
-/libisar.dylib
-/libisar.so
-/isar.dll
+/mobile/libisar.dylib
+/mobile/libisar.so
+/mobile/isar.dll
 
 # Symbolication related
 app.*.symbols
@@ -87,9 +108,9 @@ freeline_project_description.json
 **/android/key.properties
 **/android/local.properties
 .gradle/
-/android/app/debug
-/android/app/profile
-/android/app/release
+/mobile/android/app/debug
+/mobile/android/app/profile
+/mobile/android/app/release
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
