@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
@@ -9,17 +11,9 @@ from app.services.hls_service import check_ffmpeg_available
 
 ensure_storage_dirs()
 
-app = FastAPI(title="Local HLS Video Server")
 
-app.include_router(categories.router)
-app.include_router(courses.router)
-app.include_router(videos.router)
-
-app.mount("/media", StaticFiles(directory=HLS_DIR), name="media")
-
-
-@app.on_event("startup")
-async def on_startup() -> None:
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     try:
         check_ffmpeg_available()
     except RuntimeError as exc:
@@ -30,6 +24,19 @@ async def on_startup() -> None:
             await conn.execute(text("SELECT 1"))
     except Exception as exc:
         print(f"Warning: could not connect to database: {exc}")
+
+    yield
+
+    await engine.dispose()
+
+
+app = FastAPI(title="Local HLS Video Server", lifespan=lifespan)
+
+app.include_router(categories.router)
+app.include_router(courses.router)
+app.include_router(videos.router)
+
+app.mount("/media", StaticFiles(directory=HLS_DIR), name="media")
 
 
 @app.get("/health")
