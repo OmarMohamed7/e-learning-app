@@ -26,7 +26,7 @@ class _CourseApi implements CourseApi {
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'category': category,
+      r'category_id': category,
       r'search': search,
     };
     queryParameters.removeWhere((k, v) => v == null);
