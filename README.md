@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # E-Learning
+=======
+# E-Learning Platform
+>>>>>>> 942821820f6d5c45468ea95424f26702624a6d0a
 
 Monorepo for the e-learning app: a Flutter mobile client backed by a
 local FastAPI video server that handles HLS transcoding and streaming.
