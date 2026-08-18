@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mentor_stream_flutter/features/categories/presentation/widgets/category_icon_mapper.dart';
 
-class TopicItem extends StatelessWidget {
-  const TopicItem({required this.topicName, this.onTap, super.key});
+import '../../../../core/extensions/string_extensions.dart';
+import '../../data/models/category_model.dart';
 
-  final String topicName;
+class TopicItem extends StatelessWidget {
+  const TopicItem({required this.category, this.onTap, super.key});
+
+  final CategoryModel category;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final color = CategoryIconMapper.colorFor(category) ?? scheme.primary;
 
     return InkWell(
       onTap: onTap,
@@ -20,14 +24,14 @@ class TopicItem extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundColor: scheme.primary.withValues(alpha: 0.1),
-              child: Icon(
-                CategoryIconMapper.resolve(topicName),
-                color: scheme.primary,
-              ),
+              backgroundColor: color.withValues(alpha: 0.1),
+              child: Icon(CategoryIconMapper.iconFor(category), color: color),
             ),
             const SizedBox(height: 8),
-            Text(topicName, style: Theme.of(context).textTheme.bodyMedium),
+            Text(
+              category.name.capitalizeFirst,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
       ),

@@ -1,6 +1,6 @@
-# E-Learning (Mentor Stream)
+# E-Learning
 
-Monorepo for the Mentor Stream e-learning app: a Flutter mobile client backed by a
+Monorepo for the e-learning app: a Flutter mobile client backed by a
 local FastAPI video server that handles HLS transcoding and streaming.
 
 ```
@@ -36,7 +36,7 @@ mobile app's layering) see [`ARCHITECTURE.md`](ARCHITECTURE.md).
 cd backend
 uv sync
 
-createdb mentor_stream            # create the local Postgres database
+createdb elearning_stream            # create the local Postgres database
 cp .env.example .env              # adjust DATABASE_URL if needed
 uv run alembic upgrade head       # apply migrations
 

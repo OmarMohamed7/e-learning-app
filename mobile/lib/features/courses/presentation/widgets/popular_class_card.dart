@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/network/placeholder_image.dart';
+import '../../../categories/presentation/widgets/category_thumbnail_placeholder.dart';
 import '../../domain/entities/course.dart';
 
 /// A course thumbnail card with a bottom gradient scrim and title, used in
@@ -33,13 +35,17 @@ class PopularClassCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    course.thumbnailUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: theme.colorScheme.primary,
+                  if (isPlaceholderImageUrl(course.thumbnailUrl))
+                    CategoryThumbnailPlaceholder(category: course.category)
+                  else
+                    Image.network(
+                      course.thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          CategoryThumbnailPlaceholder(
+                            category: course.category,
+                          ),
                     ),
-                  ),
                   DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
