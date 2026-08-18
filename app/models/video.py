@@ -23,7 +23,8 @@ class Video(Base):
     original_filename: Mapped[str]
     course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"))
     status: Mapped[VideoStatus] = mapped_column(
-        SQLEnum(VideoStatus, name="video_status"), default=VideoStatus.PROCESSING
+        SQLEnum(VideoStatus, name="video_status", values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        default=VideoStatus.PROCESSING,
     )
     hls_path: Mapped[str | None] = mapped_column(default=None)
     duration_seconds: Mapped[int | None] = mapped_column(default=None)
