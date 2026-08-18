@@ -1,4 +1,4 @@
-# E-Learning
+# E-Learning (Flutter + FastApi)
 
 Monorepo for the e-learning app: a Flutter mobile client backed by a
 local FastAPI video server that handles HLS transcoding and streaming.
@@ -25,7 +25,7 @@ mobile app's layering) see [`ARCHITECTURE.md`](ARCHITECTURE.md).
 ## Prerequisites
 
 - Python 3.13+ and [`uv`](https://docs.astral.sh/uv/)
-- PostgreSQL
+- PostgreSQL 
 - FFmpeg (`ffmpeg -version` to check)
 - Flutter SDK (Dart ^3.11.5) and a configured iOS/Android toolchain
 - A Firebase project (for `flutterfire configure`)
@@ -51,11 +51,8 @@ The API docs are then available at `http://localhost:8000/docs`.
 cd mobile
 flutter pub get
 
-# Generates firebase_options.dart for your Firebase project
-flutterfire configure
-
 # Generates freezed/json_serializable/retrofit/isar code
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 
 flutter run
 ```
