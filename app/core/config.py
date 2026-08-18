@@ -1,4 +1,6 @@
 from pathlib import Path
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -25,3 +27,15 @@ HLS_VARIANTS = {
 def ensure_storage_dirs() -> None:
     ORIGINALS_DIR.mkdir(parents=True, exist_ok=True)
     HLS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+class Settings(BaseSettings):
+    DATABASE_URL: str
+    
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+settings = Settings() # type: ignore
