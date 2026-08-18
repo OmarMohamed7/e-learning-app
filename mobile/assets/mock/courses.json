@@ -1,0 +1,160 @@
+[
+  {
+    "id": "flutter",
+    "title": "Flutter Widget of the Week",
+    "description": "Bite-sized deep dives into individual Flutter widgets, one per episode.",
+    "instructor": {
+      "id": "flutter-team",
+      "name": "Flutter Team",
+      "headline": "Official Flutter Widget of the Week series",
+      "bio": "",
+      "avatarUrl": ""
+    },
+    "category": "flutter",
+    "thumbnailUrl": "https://image.mux.com/w00aKHww0037JjWzZ484VK00NycGC02i7nedHnFaw41M8Q00/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+    "lessons": [
+      {
+        "id": "flutter-1",
+        "courseId": "flutter",
+        "title": "SliverSemantics",
+        "description": "",
+        "order": 0,
+        "durationSeconds": 109,
+        "thumbnailUrl": "https://image.mux.com/w00aKHww0037JjWzZ484VK00NycGC02i7nedHnFaw41M8Q00/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/w00aKHww0037JjWzZ484VK00NycGC02i7nedHnFaw41M8Q00.m3u8"
+      },
+      {
+        "id": "flutter-2",
+        "courseId": "flutter",
+        "title": "Expansible",
+        "description": "",
+        "order": 1,
+        "durationSeconds": 92,
+        "thumbnailUrl": "https://image.mux.com/DUHTmN02OuCwOqzsWfomARuUmFVn7cT3APICDQgBhkSQ/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/DUHTmN02OuCwOqzsWfomARuUmFVn7cT3APICDQgBhkSQ.m3u8"
+      },
+      {
+        "id": "flutter-3",
+        "courseId": "flutter",
+        "title": "SensitiveContent",
+        "description": "",
+        "order": 2,
+        "durationSeconds": 132,
+        "thumbnailUrl": "https://image.mux.com/00RSo892BAUUlGQos9v1xodtAZ8kar3TMpYI4qMpcohU/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/00RSo892BAUUlGQos9v1xodtAZ8kar3TMpYI4qMpcohU.m3u8"
+      },
+      {
+        "id": "flutter-4",
+        "courseId": "flutter",
+        "title": "SliverToBoxAdapter",
+        "description": "",
+        "order": 3,
+        "durationSeconds": 68,
+        "thumbnailUrl": "https://image.mux.com/U7abhWyQO01Zo3lWrRyC9mHhu6bGazM00008h00xZW1Key8/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/U7abhWyQO01Zo3lWrRyC9mHhu6bGazM00008h00xZW1Key8.m3u8"
+      }
+    ],
+    "totalDurationSeconds": 401
+  },
+  {
+    "id": "business",
+    "title": "Business Management Essentials",
+    "description": "Core concepts in business finance, strategy, and marketing management.",
+    "instructor": {
+      "id": "business-mentors",
+      "name": "MentorStream Business Team",
+      "headline": "Business strategy & finance curriculum",
+      "bio": "",
+      "avatarUrl": ""
+    },
+    "category": "business",
+    "thumbnailUrl": "https://image.mux.com/hjq6Lth2fxJ3mWYKznobs72qiM8r2JRMOo6eO8jvIVY/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+    "lessons": [
+      {
+        "id": "business-1",
+        "courseId": "business",
+        "title": "Business Finance in Business Management",
+        "description": "",
+        "order": 0,
+        "durationSeconds": 171,
+        "thumbnailUrl": "https://image.mux.com/hjq6Lth2fxJ3mWYKznobs72qiM8r2JRMOo6eO8jvIVY/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/hjq6Lth2fxJ3mWYKznobs72qiM8r2JRMOo6eO8jvIVY.m3u8"
+      },
+      {
+        "id": "business-2",
+        "courseId": "business",
+        "title": "6 Steps to Write a Business Management Strategy",
+        "description": "",
+        "order": 1,
+        "durationSeconds": 151,
+        "thumbnailUrl": "https://image.mux.com/VyLvVGbwAB21uipnuF4wR00awqfpkyOTHaP6kYR9nuIc/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/VyLvVGbwAB21uipnuF4wR00awqfpkyOTHaP6kYR9nuIc.m3u8"
+      },
+      {
+        "id": "business-3",
+        "courseId": "business",
+        "title": "Top 40 Business Marketing Methods",
+        "description": "",
+        "order": 2,
+        "durationSeconds": 176,
+        "thumbnailUrl": "https://image.mux.com/NZ01zKw1rbLvKCf2tCOZxRqr7P4vc4gzFIQMRiGCHhmk/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/NZ01zKw1rbLvKCf2tCOZxRqr7P4vc4gzFIQMRiGCHhmk.m3u8"
+      }
+    ],
+    "totalDurationSeconds": 498
+  },
+  {
+    "id": "ui_ux",
+    "title": "UI/UX Design Fundamentals",
+    "description": "A 30-day challenge to learn the fundamentals of UI/UX design.",
+    "instructor": {
+      "id": "uiux-mentors",
+      "name": "MentorStream Design Team",
+      "headline": "UI/UX curriculum curators",
+      "bio": "",
+      "avatarUrl": ""
+    },
+    "category": "ui_ux",
+    "thumbnailUrl": "https://image.mux.com/01DN6hlIft3Sel2EpsrpGWdGEp800EsKxlNwZLkhjPq00A/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+    "lessons": [
+      {
+        "id": "ui_ux-1",
+        "courseId": "ui_ux",
+        "title": "Learn UI/UX in 2026 — Free 30 Day Challenge",
+        "description": "",
+        "order": 0,
+        "durationSeconds": 325,
+        "thumbnailUrl": "https://image.mux.com/01DN6hlIft3Sel2EpsrpGWdGEp800EsKxlNwZLkhjPq00A/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/01DN6hlIft3Sel2EpsrpGWdGEp800EsKxlNwZLkhjPq00A.m3u8"
+      }
+    ],
+    "totalDurationSeconds": 325
+  },
+  {
+    "id": "marketing",
+    "title": "Marketing Fundamentals",
+    "description": "A quick introduction to core marketing concepts for beginners.",
+    "instructor": {
+      "id": "marketing-mentors",
+      "name": "MentorStream Marketing Team",
+      "headline": "Marketing curriculum curators",
+      "bio": "",
+      "avatarUrl": ""
+    },
+    "category": "marketing",
+    "thumbnailUrl": "https://image.mux.com/XuTXVxNDtElgHRYGNjniTQmRtyXUengjhUYFGihIDcc/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+    "lessons": [
+      {
+        "id": "marketing-1",
+        "courseId": "marketing",
+        "title": "What Is Marketing In 3 Minutes",
+        "description": "",
+        "order": 0,
+        "durationSeconds": 181,
+        "thumbnailUrl": "https://image.mux.com/XuTXVxNDtElgHRYGNjniTQmRtyXUengjhUYFGihIDcc/thumbnail.jpg?width=640&height=360&fit_mode=smartcrop",
+        "masterPlaylistUrl": "https://stream.mux.com/XuTXVxNDtElgHRYGNjniTQmRtyXUengjhUYFGihIDcc.m3u8"
+      }
+    ],
+    "totalDurationSeconds": 181
+  }
+]
