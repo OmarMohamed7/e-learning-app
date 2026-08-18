@@ -1,17 +1,19 @@
 from pathlib import Path
+from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile as UF
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException
+from fastapi import UploadFile as UF
 from pydantic import WithJsonSchema
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.instructor import Instructor
-from app.models.video import Video, VideoCategory
+from app.core.database import get_db
+from app.models import Instructor, Video
 from app.schemas.course import CourseDetailOut, CourseListOut, CourseOut, LessonOut
 from app.schemas.video import VideoListOut, VideoOut
 from app.services import course_service, video_service
+from app.services.course_service import InvalidReferenceError
 from app.services.hls_service import process_video
 from app.services.video_service import UnsupportedFileError
-from typing import Annotated
-
 
 router = APIRouter(prefix="/api/courses", tags=["courses"])
 
@@ -43,68 +45,88 @@ def _to_video_out(video: Video) -> VideoOut:
 
 
 @router.post("", response_model=CourseOut)
-def create_course(
+async def create_course(
     title: str = Form(...),
     description: str = Form(""),
     instructor_id: str = Form(...),
     instructor_name: str = Form(...),
-    category: VideoCategory = Form(...),
+    category_id: str = Form(...),
     thumbnail_url: str = Form(...),
+    db: AsyncSession = Depends(get_db),
 ) -> CourseOut:
-    course = course_service.create_course(
-        title=title,
-        description=description,
-        instructor=Instructor(id=instructor_id, name=instructor_name),
-        category=category,
-        thumbnail_url=thumbnail_url,
-    )
-    return CourseOut(**course.model_dump())
+    try:
+        course = await course_service.create_course(
+            db,
+            title=title,
+            description=description,
+            instructor=Instructor(id=instructor_id, name=instructor_name),
+            category_id=category_id,
+            thumbnail_url=thumbnail_url,
+        )
+    except InvalidReferenceError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return CourseOut.model_validate(course)
 
 
 @router.get("", response_model=CourseListOut)
-def get_courses(category: VideoCategory | None = None, search: str | None = None) -> CourseListOut:
-    courses = course_service.list_courses(category=category, search=search)
-    return CourseListOut(items=[CourseOut(**course.model_dump()) for course in courses], total=len(courses))
+async def get_courses(
+    category_id: str | None = None,
+    search: str | None = None,
+    db: AsyncSession = Depends(get_db),
+) -> CourseListOut:
+    courses = await course_service.list_courses(db, category_id=category_id, search=search)
+    return CourseListOut(
+        items=[CourseOut.model_validate(course) for course in courses],
+        total=len(courses),
+    )
 
 
 @router.get("/popular", response_model=CourseListOut)
-def get_popular_courses() -> CourseListOut:
-    courses = course_service.list_popular_courses()
-    return CourseListOut(items=[CourseOut(**course.model_dump()) for course in courses], total=len(courses))
+async def get_popular_courses(db: AsyncSession = Depends(get_db)) -> CourseListOut:
+    courses = await course_service.list_popular_courses(db)
+    return CourseListOut(
+        items=[CourseOut.model_validate(course) for course in courses],
+        total=len(courses),
+    )
 
 
 @router.get("/{course_id}", response_model=CourseDetailOut)
-def get_course(course_id: str) -> CourseDetailOut:
-    course = course_service.get_course(course_id)
+async def get_course(course_id: str, db: AsyncSession = Depends(get_db)) -> CourseDetailOut:
+    course = await course_service.get_course(db, course_id)
     if course is None:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    videos = video_service.list_videos_by_course(course_id)
+    videos = await video_service.list_videos_by_course(db, course_id)
     lessons = [_to_lesson_out(video, order) for order, video in enumerate(videos)]
     total_duration_seconds = sum(lesson.duration_seconds for lesson in lessons)
 
+    course_out = CourseOut.model_validate(course)
     return CourseDetailOut(
-        **course.model_dump(),
+        **course_out.model_dump(),
         lessons=lessons,
         total_duration_seconds=total_duration_seconds,
     )
 
+
 UploadFile = Annotated[UF, WithJsonSchema({"type": "string", "format": "binary"})]
+
 
 @router.post("/{course_id}/videos", response_model=list[VideoOut])
 async def upload_course_videos(
     course_id: str,
     background_tasks: BackgroundTasks,
-   files: list[UploadFile] = File(...)
+    files: list[UploadFile] = File(...),
+    db: AsyncSession = Depends(get_db),
 ) -> list[VideoOut]:
-    if course_service.get_course(course_id) is None:
+    if await course_service.get_course(db, course_id) is None:
         raise HTTPException(status_code=404, detail="Course not found")
 
     created: list[Video] = []
     for file in files:
         title = Path(file.filename or "untitled").stem
         try:
-            video, original_path = video_service.create_video(
+            video, original_path = await video_service.create_video(
+                db,
                 title=title,
                 description="",
                 course_id=course_id,
@@ -120,9 +142,9 @@ async def upload_course_videos(
 
 
 @router.get("/{course_id}/videos", response_model=VideoListOut)
-def get_course_videos(course_id: str) -> VideoListOut:
-    if course_service.get_course(course_id) is None:
+async def get_course_videos(course_id: str, db: AsyncSession = Depends(get_db)) -> VideoListOut:
+    if await course_service.get_course(db, course_id) is None:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    videos = video_service.list_videos_by_course(course_id)
+    videos = await video_service.list_videos_by_course(db, course_id)
     return VideoListOut(items=[_to_video_out(video) for video in videos], total=len(videos))

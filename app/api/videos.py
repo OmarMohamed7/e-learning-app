@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.video import Video
+from app.core.database import get_db
+from app.models import Video
 from app.schemas.video import VideoOut
 from app.services import video_service
 
@@ -23,8 +25,8 @@ def _to_video_out(video: Video) -> VideoOut:
 
 
 @router.get("/{video_id}", response_model=VideoOut)
-def get_video(video_id: str) -> VideoOut:
-    video = video_service.get_video(video_id)
+async def get_video(video_id: str, db: AsyncSession = Depends(get_db)) -> VideoOut:
+    video = await video_service.get_video(db, video_id)
     if video is None:
         raise HTTPException(status_code=404, detail="Video not found")
     return _to_video_out(video)

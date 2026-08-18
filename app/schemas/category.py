@@ -1,16 +1,9 @@
-from pydantic import BaseModel
-
-from app.models.video import VideoCategory
-
-CATEGORY_LABELS: dict[VideoCategory, str] = {
-    VideoCategory.BUSINESS: "Business",
-    VideoCategory.FINANCE: "Finance",
-    VideoCategory.PROGRAMMING: "Programming",
-    VideoCategory.DESIGN: "Design",
-}
+from pydantic import BaseModel, ConfigDict
 
 
 class CategoryOut(BaseModel):
-    id: VideoCategory
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
     name: str
     icon: str | None = None
