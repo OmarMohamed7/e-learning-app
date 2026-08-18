@@ -3,9 +3,12 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from app.core.config import HLS_DIR, HLS_SEGMENT_SECONDS, HLS_VARIANTS
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.config import HLS_DIR, HLS_SEGMENT_SECONDS
 from app.core.database import async_session_maker
-from app.models import VideoStatus
+from app.models import HLSVariant, VideoStatus
 from app.services import video_service
 
 
@@ -132,24 +135,41 @@ def _probe_duration_seconds(input_path: Path) -> int | None:
         return None
 
 
-def _write_master_playlist(output_dir: Path) -> None:
+def _write_master_playlist(output_dir: Path, variants: list[tuple[str, dict]]) -> None:
     lines = ["#EXTM3U"]
-    for name, variant in HLS_VARIANTS.items():
+    for name, variant in variants:
         lines.append(f"#EXT-X-STREAM-INF:BANDWIDTH={variant['bandwidth']},RESOLUTION={variant['resolution']}")
         lines.append(f"{name}/playlist.m3u8")
     (output_dir / "master.m3u8").write_text("\n".join(lines) + "\n")
 
 
+async def _load_variants(db: AsyncSession) -> list[tuple[str, dict]]:
+    result = await db.execute(select(HLSVariant).order_by(HLSVariant.sort_order))
+    return [
+        (
+            v.name,
+            {
+                "height": v.height,
+                "video_bitrate": v.video_bitrate,
+                "audio_bitrate": v.audio_bitrate,
+                "bandwidth": v.bandwidth,
+                "resolution": v.resolution,
+            },
+        )
+        for v in result.scalars().all()
+    ]
+
+
 def _process_video_sync(
-    video_id: str, input_path: Path
+    video_id: str, input_path: Path, variants: list[tuple[str, dict]]
 ) -> tuple[VideoStatus, str | None, str | None, int | None]:
     output_dir = HLS_DIR / video_id
 
     try:
         check_ffmpeg_available()
-        for name, variant in HLS_VARIANTS.items():
+        for name, variant in variants:
             _transcode_variant(input_path, output_dir / name, variant)
-        _write_master_playlist(output_dir)
+        _write_master_playlist(output_dir, variants)
     except (FFmpegNotFoundError, TranscodeError) as exc:
         return VideoStatus.FAILED, None, str(exc), None
 
@@ -158,7 +178,22 @@ def _process_video_sync(
 
 
 async def process_video(video_id: str, input_path: Path) -> None:
-    status, hls_path, error, duration = await asyncio.to_thread(_process_video_sync, video_id, input_path)
+    async with async_session_maker() as db:
+        variants = await _load_variants(db)
+
+    if not variants:
+        async with async_session_maker() as db:
+            await video_service.update_video_status(
+                db,
+                video_id,
+                status=VideoStatus.FAILED,
+                error="No HLS variants configured.",
+            )
+        return
+
+    status, hls_path, error, duration = await asyncio.to_thread(
+        _process_video_sync, video_id, input_path, variants
+    )
 
     async with async_session_maker() as db:
         await video_service.update_video_status(
