@@ -11,7 +11,6 @@ _CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String,
       icon: json['icon'] as String?,
-      order: (json['order'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$CategoryModelToJson(_CategoryModel instance) =>
@@ -19,5 +18,4 @@ Map<String, dynamic> _$CategoryModelToJson(_CategoryModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'icon': instance.icon,
-      'order': instance.order,
     };

@@ -9,7 +9,6 @@ sealed class CategoryModel with _$CategoryModel {
     required String id,
     required String name,
     String? icon,
-    @Default(0) int order,
   }) = _CategoryModel;
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) =>
