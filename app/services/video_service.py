@@ -1,6 +1,5 @@
 import shutil
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import UploadFile
@@ -42,9 +41,6 @@ async def create_video(
     with original_path.open("wb") as out_file:
         shutil.copyfileobj(file.file, out_file)
 
-    # Use UTC time with timezone stripped to match TIMESTAMP WITHOUT TIME ZONE column
-    created_at = datetime.now(timezone.utc).replace(tzinfo=None)
-
     video = Video(
         id=video_id,
         title=title,
@@ -52,7 +48,6 @@ async def create_video(
         original_filename=file.filename or original_path.name,
         course_id=course_id,
         status=VideoStatus.PROCESSING,
-        created_at=created_at,
     )
     db.add(video)
     await db.commit()

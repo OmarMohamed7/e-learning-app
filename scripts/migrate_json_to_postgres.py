@@ -40,8 +40,6 @@ async def migrate_courses(session) -> None:
             session.add(instructor)
 
         created_at = datetime.fromisoformat(data["created_at"])
-        if created_at.tzinfo is not None:
-            created_at = created_at.replace(tzinfo=None)
 
         session.add(
             Course(
@@ -69,8 +67,6 @@ async def migrate_videos(session) -> None:
             continue
 
         created_at = datetime.fromisoformat(data["created_at"])
-        if created_at.tzinfo is not None:
-            created_at = created_at.replace(tzinfo=None)
 
         session.add(
             Video(

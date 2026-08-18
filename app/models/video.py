@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
+from sqlalchemy import DateTime
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
@@ -29,4 +30,4 @@ class Video(Base):
     hls_path: Mapped[str | None] = mapped_column(default=None)
     duration_seconds: Mapped[int | None] = mapped_column(default=None)
     error: Mapped[str | None] = mapped_column(default=None)
-    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
