@@ -1,0 +1,12 @@
+// {
+//     "python-envs.pythonProjects": [
+//         {
+//             "path": "backend",
+//             "envManager": "ms-python.python:venv",
+//             "packageManager": "ms-python.python:pip"
+//         }
+//     ]
+// }
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python"
+}

@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter",
+            "request": "launch",
+            "type": "dart",
+            "cwd": "${workspaceFolder}/mobile",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Backend",
+            "request": "launch",
+            "type": "debugpy",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "uvicorn",
+            "args": [
+                "app.main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "python": "${workspaceFolder}/backend/.venv/bin/python"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack",
+            "configurations": [
+                "Backend",
+                "Flutter"
+            ],
+            "stopAll": true
+        }
+    ]
+}
