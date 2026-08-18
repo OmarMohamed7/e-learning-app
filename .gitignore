@@ -9,6 +9,7 @@
 *.env
 mux-access-token-*.env
 /android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
 
 # Local-only media (hosted on Mux, not bundled as Flutter assets)
 /assets/videos/
