@@ -14,6 +14,11 @@ dist/
 wheels/
 *.egg-info
 
+# Internal planning docs / dev-only scripts / DB migrations (not tracked)
+backend/docs/superpowers/
+backend/scripts/
+backend/alembic/versions/
+
 # Virtual environments
 .venv
 
